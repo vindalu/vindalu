@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# chkconfig: 345 95 5
+# description: Vindaloo
+#
+NAME="vindaloo"
+APP_HOME="/opt/${NAME}"
+
+CFG_FILE="${APP_HOME}/etc/${NAME}.json"
+LOGFILE="${APP_HOME}/log/${NAME}.log"
+
+BIN="${APP_HOME}/bin/${NAME}"
+OPTS="-c ${CFG_FILE}"
+
+PGREP="pgrep -f ${BIN}\s"
+
+RETVAL=0
+
+status() {
+    pids=`${PGREP} | xargs`
+    if [ "$pids" == "" ]; then
+        echo "${NAME}... [ stopped ]"
+    else
+        echo "${NAME} running... [ ${pids} ]"
+    fi
+}
+
+start() {
+    pids=`${PGREP} | xargs`
+    if [ "$pids" != "" ]; then
+        echo "${NAME} already running... [ ${pids} ]"
+        exit 1;
+    fi
+    
+    nohup ${BIN} ${OPTS} > ${LOGFILE} 2>&1 &
+    
+    sleep 3;
+    pids=`${PGREP} | xargs`
+    if [ "$pids" == "" ]; then
+        echo "${NAME}... [ failed ]"
+        RETVAL=1
+    else
+        echo "${NAME} running... [ ${pids} ]"
+        RETVAL=0
+    fi 
+}
+
+stop() {
+    pids=`${PGREP} | xargs`
+    for pid in ${pids}; do
+        kill ${pid}
+    done
+    
+    pids=`${PGREP} | xargs`
+    if [ "$pids" == "" ]; then
+        echo "${NAME}... [ stopped ]"
+        RETVAL=0
+    else
+        echo "${NAME} running... [ ${pids} ]"
+        RETVAL=1
+    fi    
+}
+
+case $1 in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 2
+        start
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "$0 [ start | stop | restart | status ]"
+        RETVAL=1
+        ;;
+esac
+
+exit $RETVAL

@@ -1,0 +1,33 @@
+language: go
+sudo: required
+go:
+- 1.4.2
+services:
+- docker
+before_install:
+- docker pull elasticsearch:1.6
+- docker pull euforia/fpm
+- docker pull golang:1.4.2
+install:
+- sudo service docker restart ; sleep 10 
+- docker run -d -p 9200:9200 elasticsearch:1.6
+- true
+before_script:
+- sleep 10
+- make .deps
+- make .test
+script:
+- ./scripts/build.sh
+- docker ps -a
+- ls -l ./build
+before_deploy:
+- rvm use default
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: ./scripts/push-packages.sh
+  on:
+    branch: master
+env:
+  global:
+    secure: X/ya6iYNpNyE467O/68WFnCq4OwFbVbwQ9xQzQXxh0IDZ/tdLgHsh6V65NHgHKuypNMWWiWssV4UHJTC5UE8bjjrx2sXVxQGh/0aY9xPAcH8Nd/1F31pJEb+w9+2LfmtcSEOYBm6kWNYTgQoKw9Xqlo68WnNW8pQOp/vrue+e2+MbulopzMZFrWGhnoLEhBhZCmL3cibcY3fjvaEOLuStyYvBoXHVb6shGjNq6fn5MQTgzIVGay5P0vy7/uJzS3jx3KlzyhGxisHTi30VxC+XtNv9YMvXLPCEQBRWm0YpcX0/sXSJ0aCkp5npIWUXsZw5q68fDeRHbjQDJ48H4VEGoDB8JkC80/AyupNAY5hWaecCjy2VCRsgBb1Xc66275+wy5ABxIb2f1S9e7BYiu0ybXwgalaJYt9tXAwvWSBg0vnOU6auV/DNIfpbEzhaPy3e1efhHu2z6bxER8pI7YhGyMe/HsCjM4MCZ/6ABsy33K24Sie4YOKeTQ13D8fe93y9dX+Da9Pn4SUlDb9P3oFLGbrWemqsYvhyZV4pL6m4yn0aZDETHQdSfN2mrrsLeitWbToIypgNYaVAYevWBK68kIfZm2qSUKhppCmRT8iHPQADYN4Xu/mRElaCJquU93QI1ispOrLpkdxhhxOX+78YVIMVHNVBuXTgD/1pDkKDqU=
