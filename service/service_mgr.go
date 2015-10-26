@@ -10,11 +10,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/nats-io/gnatsd/server"
 
-	"github.com/euforia/vindaloo/auth"
-	"github.com/euforia/vindaloo/config"
-	"github.com/euforia/vindaloo/events"
-	"github.com/euforia/vindaloo/handlers"
-	"github.com/euforia/vindaloo/store"
+	"github.com/vindalu/vindalu/auth"
+	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/events"
+	"github.com/vindalu/vindalu/handlers"
+	"github.com/vindalu/vindalu/store"
 )
 
 type ServiceManager struct {

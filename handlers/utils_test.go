@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/euforia/vindaloo/config"
+	"github.com/vindalu/vindalu/config"
 )
 
 func Test_parseRequest(t *testing.T) {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/nats-io/gnatsd/server"
 
-	"github.com/euforia/vindaloo/auth"
-	"github.com/euforia/vindaloo/store"
+	"github.com/vindalu/vindalu/auth"
+	"github.com/vindalu/vindalu/store"
 )
 
 const VERSION = "0.4.5"

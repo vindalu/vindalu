@@ -12,8 +12,8 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
-	"github.com/euforia/vindaloo/store"
-	"github.com/euforia/vindaloo/versioning"
+	"github.com/vindalu/vindalu/store"
+	"github.com/vindalu/vindalu/versioning"
 )
 
 var ASSET_ACLS = map[string]string{

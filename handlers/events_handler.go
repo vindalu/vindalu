@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 
-	"github.com/euforia/vindaloo/events"
+	"github.com/vindalu/vindalu/events"
 )
 
 var upgrader = websocket.Upgrader{

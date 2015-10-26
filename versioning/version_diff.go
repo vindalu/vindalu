@@ -7,7 +7,7 @@ import (
 
 	"github.com/pmezard/go-difflib/difflib"
 
-	"github.com/euforia/vindaloo/store"
+	"github.com/vindalu/vindalu/store"
 )
 
 type VersionDiff struct {

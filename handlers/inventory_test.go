@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/euforia/vindaloo/config"
-	"github.com/euforia/vindaloo/logging"
-	"github.com/euforia/vindaloo/store"
+	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/logging"
+	"github.com/vindalu/vindalu/store"
 )
 
 var (

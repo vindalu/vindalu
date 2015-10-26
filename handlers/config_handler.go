@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/euforia/vindaloo/config"
+	"github.com/vindalu/vindalu/config"
 )
 
 func (ir *Inventory) ConfigHttpHandler(w http.ResponseWriter, r *http.Request) {

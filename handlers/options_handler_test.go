@@ -3,11 +3,11 @@ package handlers
 import (
 	"testing"
 
-	"github.com/euforia/vindaloo/config"
+	"github.com/vindalu/vindalu/config"
 )
 
 var (
-	testCfgfile = "../etc/vindaloo.json.sample"
+	testCfgfile = "../etc/vindalu.json.sample"
 
 	testCfg config.InventoryConfig
 	_       = config.LoadConfig(testCfgfile, &testCfg)

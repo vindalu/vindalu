@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-NAME = vindaloo
+NAME = vindalu
 
 BUILD_BASE = ./build
 BUILD_DIR = ${BUILD_BASE}/opt/${NAME}
@@ -8,9 +8,9 @@ BIN_DIR = ${BUILD_DIR}/bin
 CONF_DIR = ${BUILD_DIR}/etc
 
 DESCRIPTION = Inventory System
-VERSION = $(shell cat etc/vindaloo.json.sample | grep version | cut -d ' ' -f 6 | sed "s/\"//g" )
+VERSION = $(shell cat etc/vindalu.json.sample | grep version | cut -d ' ' -f 6 | sed "s/\"//g" )
 EPOCH = $(shell date +%s)
-URL = https://github.com/euforia/vindaloo
+URL = https://github.com/vindalu/vindalu
 
 .clean:
 	rm -rf ${BUILD_BASE}

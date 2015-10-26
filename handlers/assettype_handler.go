@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 
-	"github.com/euforia/vindaloo/store"
+	"github.com/vindalu/vindalu/store"
 )
 
 var ASSET_TYPE_ACLS = map[string]string{

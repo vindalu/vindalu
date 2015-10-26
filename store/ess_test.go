@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/euforia/vindaloo/logging"
+	"github.com/vindalu/vindalu/logging"
 )
 
 var (

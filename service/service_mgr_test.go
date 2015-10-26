@@ -8,12 +8,12 @@ import (
 
 	"github.com/nats-io/gnatsd/server"
 
-	"github.com/euforia/vindaloo/config"
-	"github.com/euforia/vindaloo/logging"
+	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/logging"
 )
 
 var (
-	testCfgfile  = "../etc/vindaloo.json.sample"
+	testCfgfile  = "../etc/vindalu.json.sample"
 	testCfg      config.InventoryConfig
 	_            = config.LoadConfig(testCfgfile, &testCfg)
 	testLogger   = logging.GetLogger("", "", false, false, false)
@@ -47,7 +47,7 @@ func Test_ServiceManager_getEndpointsRouter(t *testing.T) {
 func Test_ServiceManager_authenticateRequest(t *testing.T) {
 
 	r, _ := http.NewRequest("PUT", "/v3/virtualserver/tmp", bytes.NewBuffer([]byte(`{"environment":"production"}`)))
-	r.SetBasicAuth("admin", "vindaloo")
+	r.SetBasicAuth("admin", "vindalu")
 	if _, err := testSm.authenticateRequest(r); err != nil {
 		t.Fatalf("%s", err)
 	}

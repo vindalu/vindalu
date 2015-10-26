@@ -7,10 +7,10 @@
 #   - Internet access to pull docker images
 #
 
-NAME="vindaloo"
+NAME="vindalu"
 SCM_PATH="github.com/euforia/${NAME}"
 
-VERSION=$(cat etc/vindaloo.json.sample | grep version | cut -d ' ' -f 6 | sed "s/\"//g")
+VERSION=$(cat etc/vindalu.json.sample | grep version | cut -d ' ' -f 6 | sed "s/\"//g")
 # Image being created
 DOCKER_NAME="euforia/${NAME}:${VERSION}"
 # Image to build the code

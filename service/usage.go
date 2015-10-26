@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/euforia/vindaloo/config"
+	"github.com/vindalu/vindalu/config"
 )
 
 const usage = `
-vindaloo [ options ]
+vindalu [ options ]
 
  Server Options:
     -c, --config FILE               Configuration File (required)
@@ -32,7 +32,7 @@ func Usage() {
 }
 
 func Version() {
-	fmt.Printf("vindaloo: %s\n", config.VERSION)
+	fmt.Printf("vindalu: %s\n", config.VERSION)
 	fmt.Printf("gnatsd: %s\n", config.GNATSD_VERSION)
 	os.Exit(0)
 }

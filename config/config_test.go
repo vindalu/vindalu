@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/euforia/vindaloo/logging"
+	"github.com/vindalu/vindalu/logging"
 	"testing"
 )
 

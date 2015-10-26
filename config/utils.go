@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/euforia/vindaloo/auth"
+	"github.com/vindalu/vindalu/auth"
 )
 
 /* Converts relative paths to absolute */

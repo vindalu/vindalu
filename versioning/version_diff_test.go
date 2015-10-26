@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/euforia/vindaloo/store"
+	"github.com/vindalu/vindalu/store"
 )
 
 var (

@@ -9,7 +9,7 @@ import (
 	"github.com/nats-io/gnatsd/server"
 	"github.com/nats-io/nats"
 
-	"github.com/euforia/vindaloo/logging"
+	"github.com/vindalu/vindalu/logging"
 )
 
 var (

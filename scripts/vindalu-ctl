@@ -3,7 +3,7 @@
 # chkconfig: 345 95 5
 # description: Vindaloo
 #
-NAME="vindaloo"
+NAME="vindalu"
 APP_HOME="/opt/${NAME}"
 
 CFG_FILE="${APP_HOME}/etc/${NAME}.json"

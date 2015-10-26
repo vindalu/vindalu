@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/context"
 
-	"github.com/euforia/vindaloo/auth"
+	"github.com/vindalu/vindalu/auth"
 )
 
 func (ir *Inventory) AuthTokenHandler(w http.ResponseWriter, r *http.Request) {

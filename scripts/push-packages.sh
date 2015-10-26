@@ -10,8 +10,8 @@ build_dir="./build"
 rpm_pkg=`ls ${build_dir} | grep x86_64.rpm`
 deb_pkg=`ls ${build_dir} | grep amd64.deb`
 
-rpm_repo="euforia/vindaloo/el/6"
-deb_repo="euforia/vindaloo/ubuntu/trusty"
+rpm_repo="vindalu/vindalu/el/6"
+deb_repo="vindalu/vindalu/ubuntu/trusty"
 
 RETVAL=0
 

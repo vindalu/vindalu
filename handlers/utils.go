@@ -10,7 +10,7 @@ import (
 
 	elastigo "github.com/mattbaird/elastigo/lib"
 
-	"github.com/euforia/vindaloo/config"
+	"github.com/vindalu/vindalu/config"
 )
 
 var (

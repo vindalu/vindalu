@@ -18,7 +18,7 @@ type HttpBasicAuthenticator struct {
 func NewHttpBasicAuthenticator(htpasswdFile string) *HttpBasicAuthenticator {
 	return &HttpBasicAuthenticator{
 		//secretFunc: httpauth.HtpasswdFileProvider(htpasswdFile),
-		basicAuth: httpauth.NewBasicAuthenticator("vindaloo", httpauth.HtpasswdFileProvider(htpasswdFile)),
+		basicAuth: httpauth.NewBasicAuthenticator("vindalu", httpauth.HtpasswdFileProvider(htpasswdFile)),
 	}
 }
 

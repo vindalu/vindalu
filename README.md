@@ -1,4 +1,4 @@
-vindaloo [![Build Status](https://travis-ci.org/euforia/vindaloo.svg?branch=master)](https://travis-ci.org/euforia/vindaloo)
+vindalu [![Build Status](https://travis-ci.org/vindalu/vindalu.svg?branch=master)](https://travis-ci.org/vindalu/vindalu)
 ========
 An inventory system to store, query and analyze infrastructure, configurations or any other type of data.
 
@@ -23,35 +23,35 @@ System packages are available for installation.  You can also manually build the
     elasticsearch >= 1.4.x
 
 ##### Package install
-`rpm` and `deb` packages can be found on [packagecloud.io](https://packagecloud.io/euforia/vindaloo).  Installation instructions are also available there if needed.
+`rpm` and `deb` packages can be found on [packagecloud.io](https://packagecloud.io/vindalu/vindalu).  Installation instructions are also available there if needed.
 
 ##### Manual install
 To perform a manual install continue to the section below:
 
     # Build and install
-    $ go get github.com/euforia/vindaloo
-    $ cd $GOPATH/src/github.com/euforia/vindaloo
+    $ go get github.com/vindalu/vindalu
+    $ cd $GOPATH/src/github.com/vindalu/vindalu
     $ make all
     
-This will install the the directory structure under `./build/opt/vindaloo/`, which should be copied to `/opt/vindaloo`.  Once copied change to that directory and proceed with configuration section.
+This will install the the directory structure under `./build/opt/vindalu/`, which should be copied to `/opt/vindalu`.  Once copied change to that directory and proceed with configuration section.
 
 Configuration
 -------------
 Start by copying the sample configuration files in the `etc` directory.
 
-    $ cp etc/vindaloo.json.sample etc/vindaloo.json
+    $ cp etc/vindalu.json.sample etc/vindalu.json
     $ cp etc/local-groups.json.sample etc/local-groups.json
 
 Fill in the appropriate values keeping in mind that paths in the config file that do not start with `/` are treated as relative paths from the current working directory. After your configuration is complete you can start the service.  Here's a description of the various configuration options.
 
 ##### auth
-Auth is required for all write requests as well as to listen to event subscriptions.  By default `basic` http auth is enabled using the `etc/htpasswd` file.  The default credentials are `admin:vindaloo`.  
+Auth is required for all write requests as well as to listen to event subscriptions.  By default `basic` http auth is enabled using the `etc/htpasswd` file.  The default credentials are `admin:vindalu`.  
 
 The `groups_file` is used to specify which users are allowed to create asset types as per the `LocalAuthGroups`.  A sample config file is located under `etc/`.
 
 LDAP auth is also available. This can be used by setting the `type` field to `ldap` and adding the appropriate options in the `config` section.  The available options are `url`, `search_base`, `cache_ttl`, `bind_dn`, and `bind_password`.  `bind_password` can either be a string or a location to a file containing the password.  In the case of a file the path must be proceeded by `file://` e.g (default). 
 
-    file:///opt/vindaloo/etc/bindpasswd
+    file:///opt/vindalu/etc/bindpasswd
 
 ##### datastore
 Currently, elasticsearch is the only supported backend.  The only values that may require modifying are `host` and `port` based on your setup.
@@ -80,7 +80,7 @@ Once the installation and configuration is complete, you'll need to make sure el
 
 Once elasticsearch is running (it can take some time to become available), execute the following command to start the service:
 
-    $ ./bin/vindaloo-ctl start
+    $ ./bin/vindalu-ctl start
 
 You can now start using the system.
 
@@ -388,7 +388,7 @@ Example (javascript):
 
 Auth Tokens
 -----------
-To use token authentication, you need generate a token with HTTP basic authentication (default login is admin/vindaloo):
+To use token authentication, you need generate a token with HTTP basic authentication (default login is admin/vindalu):
 
     - POST /auth/access_token
 
@@ -454,7 +454,7 @@ This will produce the following:
 
 - A .rpm and .deb in the `build` folder
 
-- A docker image called `euforia/vindaloo`
+- A docker image called `vindalu/vindalu`
 
 ###### Notes:
 

@@ -15,10 +15,10 @@
         }
     },
     "default_result_size": 1000000,
-    "webroot": "/opt/vindaloo/ui",
+    "webroot": "/opt/vindalu/ui",
     "events": {
         "enabled": true,
-        "config_file": "/opt/vindaloo/etc/gnatsd.conf"
+        "config_file": "/opt/vindalu/etc/gnatsd.conf"
     },
     "endpoints":{
         "api_prefix": "/v3",
@@ -28,9 +28,9 @@
     "auth": {
         "type": "basic",
         "config": {
-            "htpasswd_file": "/opt/vindaloo/etc/htpasswd"
+            "htpasswd_file": "/opt/vindalu/etc/htpasswd"
         },
-        "groups_file": "/opt/vindaloo/etc/local-groups.json",
+        "groups_file": "/opt/vindalu/etc/local-groups.json",
         "token": {
             "signing_key": "should-be-changed",
             "ttl": 7200

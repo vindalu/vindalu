@@ -8,9 +8,9 @@ import (
 
 	"github.com/nats-io/gnatsd/server"
 
-	"github.com/euforia/vindaloo/config"
-	"github.com/euforia/vindaloo/logging"
-	"github.com/euforia/vindaloo/service"
+	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/logging"
+	"github.com/vindalu/vindalu/service"
 )
 
 var (

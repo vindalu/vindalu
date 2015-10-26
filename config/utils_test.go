@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	testCfgfile = "../etc/vindaloo.json.sample"
+	testCfgfile = "../etc/vindalu.json.sample"
 	testAuthCfg = map[string]interface{}{
 		"cache_ttl":     2600,
 		"url":           "ldaps://host:636",

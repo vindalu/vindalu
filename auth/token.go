@@ -8,7 +8,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-const DEFAULT_TOKEN_ISS = "vindaloo" // token issuer
+const DEFAULT_TOKEN_ISS = "vindalu" // token issuer
 
 func GetNewToken(username string, ttl int64) (token *jwt.Token) {
 
