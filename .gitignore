@@ -1,9 +1,7 @@
 # App specific
 build/
-*.json
 *ldapclient_test*
 *password*
-*passwd*
 .DS_Store
 
 # node

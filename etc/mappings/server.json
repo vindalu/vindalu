@@ -1,0 +1,13 @@
+{
+    "server": {
+        "dynamic_templates": [
+            {
+                "is_physical": {
+                    "match_pattern"     : "regex",
+                    "match"             : "[i|I][s|S]_*[p|P]hysical",
+                    "mapping"           : { "type": "boolean" }
+                }
+            }
+        ]
+    }
+}

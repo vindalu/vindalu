@@ -1,0 +1,39 @@
+{
+    "_default_": {
+        "_id": {
+            "index": "not_analyzed",
+            "store": true
+        },
+        "_timestamp" : {
+            "enabled" : true,
+            "store" : true
+        },
+        "properties": {
+            "created_on": { "type": "float" },
+            "PublicIpAddress": { "type": "ip" },
+            "PublicIp": { "type": "ip" },
+            "PrivateIpAddress": { "type": "ip" }
+        },
+        "dynamic_templates": [
+            {
+                "string_fields" : {
+                    "match"              : "*",
+                    "match_mapping_type" : "string",
+                    "mapping"            : { "type" : "string", "index" : "not_analyzed", "omit_norms" : true }
+                }
+            },{
+                "ip_address": {
+                    "match_pattern"     : "regex",
+                    "match"             : "[iI][pP]_*[aA]ddr(ess)*",
+                    "mapping"           : { "type" : "ip", "index": "not_analyzed" }
+                }
+            },{
+                "tm_release": {
+                    "match_pattern"     : "regex",
+                    "match"             : "[tT][mM]_*[rR]elease",
+                    "mapping"           : { "type": "string", "index": "not_analyzed" }
+                }
+            }
+        ]
+    }
+}
