@@ -10,7 +10,8 @@ build_dir="./build"
 rpm_pkg=`ls ${build_dir} | grep x86_64.rpm`
 deb_pkg=`ls ${build_dir} | grep amd64.deb`
 
-rpm_repo="vindalu/vindalu/el/6"
+rpm6_repo="vindalu/vindalu/el/6"
+rpm7_repo="vindalu/vindalu/el/6"
 deb_repo="vindalu/vindalu/ubuntu/trusty"
 
 RETVAL=0
@@ -48,7 +49,8 @@ main() {
     }
 
     if [ "${rpm_pkg}" != "" ]; then 
-        push_package $rpm_repo "${rpm_pkg}"
+        push_package $rpm6_repo "${rpm_pkg}"
+        push_package $rpm7_repo "${rpm_pkg}"
     else
         echo "No .RPM's found!"
     fi
