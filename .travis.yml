@@ -9,7 +9,7 @@ before_install:
 - docker pull euforia/fpm
 - docker pull golang:1.4.2
 install:
-- sudo service docker restart ; sleep 10 
+- sudo service docker restart ; sleep 10
 - docker run -d -p 9200:9200 elasticsearch:1.6
 - true
 before_script:
@@ -30,4 +30,4 @@ deploy:
     branch: master
 env:
   global:
-    secure: X/ya6iYNpNyE467O/68WFnCq4OwFbVbwQ9xQzQXxh0IDZ/tdLgHsh6V65NHgHKuypNMWWiWssV4UHJTC5UE8bjjrx2sXVxQGh/0aY9xPAcH8Nd/1F31pJEb+w9+2LfmtcSEOYBm6kWNYTgQoKw9Xqlo68WnNW8pQOp/vrue+e2+MbulopzMZFrWGhnoLEhBhZCmL3cibcY3fjvaEOLuStyYvBoXHVb6shGjNq6fn5MQTgzIVGay5P0vy7/uJzS3jx3KlzyhGxisHTi30VxC+XtNv9YMvXLPCEQBRWm0YpcX0/sXSJ0aCkp5npIWUXsZw5q68fDeRHbjQDJ48H4VEGoDB8JkC80/AyupNAY5hWaecCjy2VCRsgBb1Xc66275+wy5ABxIb2f1S9e7BYiu0ybXwgalaJYt9tXAwvWSBg0vnOU6auV/DNIfpbEzhaPy3e1efhHu2z6bxER8pI7YhGyMe/HsCjM4MCZ/6ABsy33K24Sie4YOKeTQ13D8fe93y9dX+Da9Pn4SUlDb9P3oFLGbrWemqsYvhyZV4pL6m4yn0aZDETHQdSfN2mrrsLeitWbToIypgNYaVAYevWBK68kIfZm2qSUKhppCmRT8iHPQADYN4Xu/mRElaCJquU93QI1ispOrLpkdxhhxOX+78YVIMVHNVBuXTgD/1pDkKDqU=
+    secure: II5wUusAShUH6OdzCYgPUYW+lHUmcIJQyI8rqKJzDRj8jrPH0+1FAP8HmS9KlBRqhbjeyxo3yo85+bvMr2+qYxmp7X/iEaQ/0THZor/bW83g+qu0sCE8sf0RQ6AC8TjWDNp5RoLV+DyDGKvJgrKHouFT5w462kllCW5bfSWnBpahZJZjn+IHwhsvm/HYt+ir2no4oiQbZCRsSdQcpVe9hCy/PM4edLciYsHfhq7VZVg6DUJEr28E4X4kGTUeAyHoaedaTn1JlgRS1olLBYfBFkm4hPgUCJoFD+CCNAn8Bk6Do8gb28GOiKU+40c6Op53A5HCHXdNI/Xol136jmT+2G4f8JACSbXx0Mop8j8NxXvyYEHpHL2WjKSK5U+Ci/4pIvhugDWuTOsN5ydrN8D92OsUIycNGuuCFfOJFniyxZ9k2At05JgkCbb5L9/37skrWIUxaNszJ8nzjslS7uvTUWeg0JT3USEnZKoS6Ii/TSCyFb9uhNAwMqvObrCRjrOs29CHfq3babP8BD8Bds0zw2yBYuuEwQcv2FJPqgfRFlIegt4X5eCdwdt6o+v6ZtX9XPOSfWXfNwMUTif/qQK193lkU4p+lP57Qj5FhzzNGQ0uIOkHu20Ky/w1x26GaPUjbccCfPmwogTPvtK2tMZze5j+IkIHlLvyV+oovYGo7Nc=
