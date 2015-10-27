@@ -7,7 +7,7 @@ import (
 
 func Test_NewNewHttpBasicAuthenticator(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/v3/type/id", nil)
-	req.SetBasicAuth("admin", "vindalu")
+	req.SetBasicAuth("admin", "vindaloo")
 
 	bauth := NewHttpBasicAuthenticator("../etc/htpasswd")
 	if _, _, err := bauth.AuthenticateRequest(req); err != nil {

@@ -47,7 +47,7 @@ func Test_ServiceManager_getEndpointsRouter(t *testing.T) {
 func Test_ServiceManager_authenticateRequest(t *testing.T) {
 
 	r, _ := http.NewRequest("PUT", "/v3/virtualserver/tmp", bytes.NewBuffer([]byte(`{"environment":"production"}`)))
-	r.SetBasicAuth("admin", "vindalu")
+	r.SetBasicAuth("admin", "vindaloo")
 	if _, err := testSm.authenticateRequest(r); err != nil {
 		t.Fatalf("%s", err)
 	}
