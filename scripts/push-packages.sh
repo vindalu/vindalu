@@ -11,7 +11,7 @@ rpm_pkg=`ls ${build_dir} | grep x86_64.rpm`
 deb_pkg=`ls ${build_dir} | grep amd64.deb`
 
 rpm6_repo="vindalu/vindalu/el/6"
-rpm7_repo="vindalu/vindalu/el/6"
+rpm7_repo="vindalu/vindalu/el/7"
 deb_repo="vindalu/vindalu/ubuntu/trusty"
 
 RETVAL=0
