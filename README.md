@@ -353,39 +353,6 @@ Response:
         "count": 123
     }]
 
-##### Subscribe to events
-In order to subscribe to events, an access token must be generated.  See below for more details on how to generate tokens.  
-
-Once a token has been generated, you can subscribe to events by connecting to the websocket endpoint - `ws://localhost:5454/v3/events/< event >`, where `event` can be a an event type or an event type wild card.
-
-Subscribe to a specific event (e.g):
-
-    ws://localhost:5454/v3/events/asset.created
-
-Subscribe to all `asset` events (e.g):
-
-    ws://localhost:5454/v3/events/asset.*
-
-Subscribe to all events (e.g):
-
-    ws://localhost:5454/v3/events/.*
-
-Example (javascript):
-
-    // Subscribe to all asset related events
-    var ws = new WebSocket('ws://localhost:5454/v3/events/asset.*?access_token=<my_token>');
-
-    ws.on('open', function() { console.log('opened') });
-
-    // Set callback for event.
-    ws.on('message', function(message) {
-        var data = JSON.parse(message);
-        console.log('Received event:', data);
-        // DO SOMETHING WITH THE DATA
-    });
-
-    ws.on('close', function() { console.log('closed'); });
-
 Auth Tokens
 -----------
 To use token authentication, you need generate a token with HTTP basic authentication (default login is admin/vindalu):
