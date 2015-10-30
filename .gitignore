@@ -1,5 +1,7 @@
 # App specific
 build/
+etc/vindalu.json
+bind.passwd
 *ldapclient_test*
 *password*
 .DS_Store

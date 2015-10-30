@@ -1,0 +1,40 @@
+{ 
+    "datastore": {
+        "type": "elasticsearch",
+        "config": {
+            "host": "localhost",
+            "port": 9200,
+            "index": "inventory",
+            "mappings_dir": "etc/mappings"
+        }
+    },
+    "asset": {
+        "required_fields": ["status"],
+        "enforced_fields": {
+            "status": ["enabled", "disabled"]
+        }
+    },
+    "default_result_size": 1000000,
+    "webroot": "/opt/vindalu/ui",
+    "events": {
+        "enabled": true,
+        "config_file": "/opt/vindalu/etc/gnatsd.conf"
+    },
+    "endpoints":{
+        "api_prefix": "/v3",
+        "raw": "raw",
+        "events": "events"
+    },
+    "auth": {
+        "type": "basic",
+        "config": {
+            "htpasswd_file": "/opt/vindalu/etc/htpasswd"
+        },
+        "groups_file": "/opt/vindalu/etc/local-groups.json",
+        "token": {
+            "signing_key": "should-be-changed",
+            "ttl": 7200
+        }
+    },
+    "version": "0.5.0"
+}

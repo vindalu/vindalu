@@ -1,3 +1,13 @@
+0.5.0
+-----
+* Project moved to `vindalu/vindalu` on github.
+* Added resource type and id constraints on values.
+* Code refactor.
+
+0.4.5
+-----
+* Support for multiple mappings based on type.
+
 0.4.4
 -----
 * Added search handler.
