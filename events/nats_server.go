@@ -8,6 +8,10 @@ import (
 	"github.com/nats-io/gnatsd/server"
 )
 
+/*
+ * Patch to dynamically add routes - https://github.com/chendo/gnatsd
+ */
+
 func configureServerOptions(opts *server.Options, configFile string, routeHosts []string) (mergedOpts *server.Options, err error) {
 	// Parse config if given
 	if configFile != "" {
