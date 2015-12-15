@@ -7,9 +7,11 @@ import (
 )
 
 var (
-	testIndex     = "test_index"
-	testAssetType = "test_asset_type"
-	testAssetId   = "test"
+	testIndex            = "test_index"
+	testAssetType        = "test_asset_type"
+	testAssetId          = "test"
+	testCreateType       = "test_create_type"
+	testCreateTypeWProps = "test_create_type_with_props"
 
 	testData = BaseAsset{
 		Id:   testAssetId,
@@ -46,6 +48,33 @@ var (
 	testEds, _ = NewElasticsearchDatastore(&testDsConfig, testLogger)
 	testIds    = NewInventoryDatastore(testEds, testAssetCfg, testLogger)
 )
+
+func Test_InventoryDatastore_CreateAssetType(t *testing.T) {
+	err := testIds.CreateAssetType(testCreateType, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err = testIds.TypeExists(testCreateType); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func Test_InventoryDatastore_CreateAssetType_with_properties(t *testing.T) {
+	props := map[string]interface{}{
+		"properties": map[string]interface{}{
+			"foo": map[string]string{"type": "string"},
+		},
+	}
+	err := testIds.CreateAssetType(testCreateType, props)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err = testIds.TypeExists(testCreateType); err != nil {
+		t.Fatal(err)
+	}
+}
 
 func Test_InventoryDatastore_CreateAsset(t *testing.T) {
 	// Delete just in case
