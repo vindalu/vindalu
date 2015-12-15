@@ -1,7 +1,13 @@
+0.5.1
+-----
+* Lowered generic string type mapping precedence for default mapping.
+* Fix for aggregate counts
+* Added Godep support
+
 0.5.0
 -----
 * Project moved to `vindalu/vindalu` on github.
-* Added resource type and id constraints on values.
+* Added constraints on resource type and id values.
 * Code refactor.
 
 0.4.5
