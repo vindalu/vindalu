@@ -36,3 +36,13 @@ func Test_BaseAsset_GetVersion(t *testing.T) {
 		t.Fatalf("Version should be -1(bad version)")
 	}
 }
+
+func Test_VindaluClusterStatus_ClusterMemberAddrs(t *testing.T) {
+	cs, err := testInv.ClusterStatus()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	addrs := cs.ClusterMemberAddrs()
+	t.Log(addrs)
+}

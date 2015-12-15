@@ -1,3 +1,7 @@
+0.5.2
+-----
+* Refactored abstraction layers
+
 0.5.1
 -----
 * Lowered generic string type mapping precedence for default mapping.

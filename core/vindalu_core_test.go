@@ -35,13 +35,6 @@ func TestMain(m *testing.M) {
 	tv["mappings_dir"] = "../etc/mappings"
 	testInvCfg.Datastore.Config = tv
 
-	/*
-		testDS, err = GetDatastore(&testInvCfg.Datastore, testLogger)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	*/
 	var err error
 	testInv, err = NewVindaluCore(&testInvCfg, testLogger)
 	if err != nil {
@@ -51,7 +44,17 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func Test_Inventory_ExecuteQuery(t *testing.T) {
+func Test_NewVindaluCore_error(t *testing.T) {
+	testInvCfg.Datastore.Type = "foo"
+	_, err := NewVindaluCore(&testInvCfg, testLogger)
+	if err == nil {
+		t.Fatalf("Should have failed!\n")
+	}
+
+	testInvCfg.Datastore.Type = "elasticsearch"
+}
+
+func Test_VindaluCore_ExecuteQuery(t *testing.T) {
 	//r, _ := http.NewRequest("GET", "/v3/virtualserver", bytes.NewBuffer([]byte(`{"status":"enabled"}`)))
 
 	q := map[string]interface{}{"status": "enabled"}
@@ -61,3 +64,24 @@ func Test_Inventory_ExecuteQuery(t *testing.T) {
 		t.Fatalf("%s", err)
 	}
 }
+
+func Test_VindaluCore_ClusterStatus(t *testing.T) {
+	_, err := testInv.ClusterStatus()
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+/*
+func Test_VindaluCore_CreateAssetType(t *testing.T) {
+
+	err := testInv.CreateAssetType("testtype", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//if err = testInv.datastore.TypeExists("testtype"); err != nil {
+	//	t.Fatalf("type not found: %s", err.Error())
+	//}
+}
+*/

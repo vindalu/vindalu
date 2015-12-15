@@ -228,8 +228,12 @@ func (e *ElasticsearchDatastore) CreateType(assetType string, opts map[string]in
 		if mapping, err = json.Marshal(newType); err != nil {
 			return
 		}
+	} else {
+		mapping = []byte(`{"properties":{}}`)
 	}
 
+	e.log.Noticef("%s %s '%s'\n", e.Index, assetType, mapping)
+	//if mapping != nil {
 	if err = e.Conn.PutMappingFromJSON(e.Index, assetType, mapping); err != nil {
 		return
 	}
@@ -237,6 +241,7 @@ func (e *ElasticsearchDatastore) CreateType(assetType string, opts map[string]in
 	if err = e.Conn.PutMappingFromJSON(e.VersionIndex, assetType, mapping); err != nil {
 		return
 	}
+	//}
 
 	return
 }
