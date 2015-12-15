@@ -77,9 +77,6 @@ func Test_InventoryDatastore_CreateAssetType_with_properties(t *testing.T) {
 }
 
 func Test_InventoryDatastore_CreateAsset(t *testing.T) {
-	// Delete just in case
-	testIds.Conn.DeleteIndex(testIds.Index)
-	testIds.Conn.DeleteIndex(testIds.VersionIndex)
 
 	id, err := testIds.CreateAsset(testData, true)
 	if err != nil {
