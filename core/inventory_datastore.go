@@ -314,8 +314,29 @@ func (ds *InventoryDatastore) ExecAggsQuery(index, assetType, field string, aggs
 	if err = json.Unmarshal(resp.Aggregations, &aggr); err == nil {
 		items = make([]AggregatedItem, len(aggr[field].Buckets))
 		for i, bck := range aggr[field].Buckets {
-			items[i] = AggregatedItem{bck.Key, bck.DocCount}
+			items[i] = AggregatedItem{Count: bck.DocCount}
+			switch bck.Key.(type) {
+			case string:
+				items[i].Name, _ = bck.Key.(string)
+				break
+			case int:
+				number, _ := bck.Key.(int)
+				items[i].Name = fmt.Sprintf("%d", number)
+				break
+			case int64:
+				number, _ := bck.Key.(int64)
+				items[i].Name = fmt.Sprintf("%d", number)
+				break
+			case float64:
+				number, _ := bck.Key.(float64)
+				items[i].Name = fmt.Sprintf("%f", number)
+				break
+			default:
+				err = fmt.Errorf("Unknown type: ", bck.Key)
+				break
+			}
 		}
+		ds.log.Noticef("%s\n", resp.Aggregations)
 	}
 	return
 }

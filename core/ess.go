@@ -19,8 +19,8 @@ type AggrField struct {
 	Buckets                 []AggrBucketItem `json:"buckets"`
 }
 type AggrBucketItem struct {
-	Key      string `json:"key"`
-	DocCount int64  `json:"doc_count"`
+	Key      interface{} `json:"key"`
+	DocCount int64       `json:"doc_count"`
 }
 
 type ElasticsearchVersion struct {

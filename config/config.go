@@ -8,7 +8,7 @@ import (
 	"github.com/vindalu/vindalu/auth"
 )
 
-const VERSION = "0.5.0"
+const VERSION = "0.5.1"
 
 const GNATSD_VERSION = server.VERSION
 
