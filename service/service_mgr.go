@@ -28,9 +28,6 @@ type ServiceManager struct {
 	// Handles adding new asset types by admins
 	localAuthGroups auth.LocalAuthGroups
 
-	// needed for ClusterStatus
-	dstore *core.InventoryDatastore
-
 	// embedded gnatsd
 	gnatsOpts   *server.Options
 	gnatsServer *server.Server
@@ -44,11 +41,10 @@ type ServiceManager struct {
 func NewServiceManager(cfg *config.InventoryConfig, gnatOpts server.Options, log server.Logger) (sm *ServiceManager, err error) {
 	sm = &ServiceManager{cfg: cfg, log: log}
 
-	if sm.dstore, err = core.GetDatastore(&cfg.Datastore, log); err != nil {
+	var vc *core.VindaluCore
+	if vc, err = core.NewVindaluCore(cfg, log); err != nil {
 		return
 	}
-
-	vc := core.NewVindaluCore(cfg, sm.dstore, log)
 	// Setup inventory core
 	sm.inv = handlers.NewVindaluApiHandler(vc, log)
 	//sm.inv = handlers.NewInventory(cfg, sm.dstore, log)
@@ -58,7 +54,7 @@ func NewServiceManager(cfg *config.InventoryConfig, gnatOpts server.Options, log
 	}
 
 	// Store cluster status at init time
-	cstatus, cErr := sm.dstore.ClusterStatus()
+	cstatus, cErr := vc.ClusterStatus()
 	if cErr != nil {
 		sm.log.Noticef("Could not get cluster status\n")
 	} else {

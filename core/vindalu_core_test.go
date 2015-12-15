@@ -1,9 +1,9 @@
 package core
 
 import (
-	"bytes"
+	//"bytes"
 	"fmt"
-	"net/http"
+	//"net/http"
 	"os"
 	"testing"
 
@@ -35,22 +35,29 @@ func TestMain(m *testing.M) {
 	tv["mappings_dir"] = "../etc/mappings"
 	testInvCfg.Datastore.Config = tv
 
+	/*
+		testDS, err = GetDatastore(&testInvCfg.Datastore, testLogger)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	*/
 	var err error
-	testDS, err = GetDatastore(&testInvCfg.Datastore, testLogger)
+	testInv, err = NewVindaluCore(&testInvCfg, testLogger)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	testInv = NewVindaluCore(&testInvCfg, testDS, testLogger)
-
 	os.Exit(m.Run())
 }
 
 func Test_Inventory_ExecuteQuery(t *testing.T) {
-	r, _ := http.NewRequest("GET", "/v3/virtualserver", bytes.NewBuffer([]byte(`{"status":"enabled"}`)))
+	//r, _ := http.NewRequest("GET", "/v3/virtualserver", bytes.NewBuffer([]byte(`{"status":"enabled"}`)))
 
-	if _, err := testInv.ExecuteQuery("virtualserver", r); err != nil {
+	q := map[string]interface{}{"status": "enabled"}
+
+	//if _, err := testInv.ExecuteQuery("virtualserver", r); err != nil {
+	if _, err := testInv.ExecuteQuery("virtualserver", q, nil); err != nil {
 		t.Fatalf("%s", err)
 	}
 }

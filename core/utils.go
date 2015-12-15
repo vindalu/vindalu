@@ -3,12 +3,14 @@ package core
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	//"io/ioutil"
+	//"net/http"
 	"strconv"
 	"strings"
 
 	elastigo "github.com/mattbaird/elastigo/lib"
+
+	"github.com/vindalu/vindalu/config"
 )
 
 var (
@@ -37,7 +39,7 @@ func isRegexSearch(searchStr string) bool {
 	return false
 }
 
-func isSearchParamOption(opt string) bool {
+func IsSearchParamOption(opt string) bool {
 	for _, v := range SEARCH_PARAM_OPTIONS {
 		if opt == v {
 			return true
@@ -46,55 +48,71 @@ func isSearchParamOption(opt string) bool {
 	return false
 }
 
-/*
-	Return:
-		should also return the params as elastic search global args/opts
-*/
-func parseRequestQueryParams(r *http.Request) (req map[string]interface{}, err error) {
-	paramsQuery := r.URL.Query()
-	req = map[string]interface{}{}
-	for k, v := range paramsQuery {
-		if !isSearchParamOption(k) {
-			req[k] = strings.Join(v, "|")
+func containsNullFields(req *map[string]interface{}) bool {
+	for _, v := range *req {
+		if v == nil {
+			return true
 		}
 	}
+	return false
+}
+
+/* Used for POST - presence and non nil checking of required fields */
+func ValidateRequiredFields(cfg *config.AssetConfig, req map[string]interface{}) error {
+	for _, rf := range cfg.RequiredFields {
+		if _, ok := req[rf]; !ok {
+			return fmt.Errorf("'%s' field required!", rf)
+		}
+	}
+	return nil
+}
+
+func validateEnforcedFields(cfg *config.AssetConfig, req map[string]interface{}) error {
+
+	for k, enforcedVals := range cfg.EnforcedFields {
+		if _, ok := req[k]; ok {
+			found := false
+			for _, ef := range enforcedVals {
+				if req[k] == ef {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return fmt.Errorf("'%s' field must be: %v\n", k, enforcedVals)
+			}
+		}
+	}
+	return nil
+}
+
+/* Convert a given number to an int64 */
+func parseVersion(ver interface{}) (verInt int64, err error) {
+	switch ver.(type) {
+	case float64:
+		verF, _ := ver.(float64)
+		verInt = int64(verF)
+		break
+	case int64:
+		verInt, _ = ver.(int64)
+		break
+	case int:
+		verI, _ := ver.(int)
+		verInt = int64(verI)
+		break
+	case string:
+		verStr, _ := ver.(string)
+		verInt, err = strconv.ParseInt(verStr, 10, 64)
+		break
+	default:
+		err = fmt.Errorf("Could not parse version: %v", ver)
+		break
+	}
+
 	return
 }
 
-/*
-	Read request body into map[string]interface{}
-*/
-func ParseRequestBody(r *http.Request) (req map[string]interface{}, err error) {
-	req = map[string]interface{}{}
-
-	if r.Body == nil {
-		return
-	}
-
-	var body []byte
-	// check if body has been supplied.  return w/o err if no body supplied
-	if _, berr := r.Body.Read(body); berr != nil {
-		return
-	}
-
-	if body, err = ioutil.ReadAll(r.Body); err != nil {
-		return
-	}
-	defer r.Body.Close()
-
-	err = json.Unmarshal(body, &req)
-	return
-}
-
-/*
-	Parse and extract search options from request parameters for ess.
-
-	Args:
-
-		defaultResultSize : result size to return (default: as specified in config)
-		reqOpts : request params
-*/
-func BuildSearchOptions(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
+func ParseGlobalParams(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
 	qopts = map[string]interface{}{}
 	for k, v := range reqOpts {
 		switch k {
@@ -142,21 +160,39 @@ func BuildSearchOptions(defaultResultSize int64, reqOpts map[string][]string) (q
 			break
 		}
 	}
+
 	// Neither got added so default them.
 	if _, ok := qopts["from"]; !ok {
 		qopts["from"] = int64(0)
 		qopts["size"] = defaultResultSize
 	}
 
-	if val, ok := reqOpts["aggregate"]; ok {
-		qopts["aggs"] = parseAggregateQuery(val[0], qopts["size"])
-		qopts["size"] = 0
-		delete(qopts, "from")
-	}
 	return
 }
 
-func parseAggregateQuery(field string, resultSize interface{}) map[string]interface{} {
+/*
+	Parse and extract search options from request parameters for ess.
+
+	Args:
+
+		defaultResultSize : result size to return (default: as specified in config)
+		reqOpts : request params
+*/
+func buildElasticsearchQueryOptions(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
+	if qopts, err = ParseGlobalParams(defaultResultSize, reqOpts); err != nil {
+		return
+	}
+
+	if val, ok := reqOpts["aggregate"]; ok {
+		qopts["aggs"] = buildElasticsearchAggregateQuery(val[0], qopts["size"])
+		qopts["size"] = 0
+		delete(qopts, "from")
+	}
+
+	return
+}
+
+func buildElasticsearchAggregateQuery(field string, resultSize interface{}) map[string]interface{} {
 	return map[string]interface{}{
 		field: map[string]interface{}{
 			"terms": map[string]interface{}{
@@ -167,7 +203,8 @@ func parseAggregateQuery(field string, resultSize interface{}) map[string]interf
 	}
 }
 
-func parseSearchRequest(index string, req map[string]interface{}) (query map[string]interface{}, err error) {
+// Build elasticsearch query from vindalu query
+func buildElasticsearchBaseQuery(index string, req map[string]interface{}) (query map[string]interface{}, err error) {
 
 	filterOps := []interface{}{}
 
@@ -241,23 +278,8 @@ func parseSearchRequest(index string, req map[string]interface{}) (query map[str
 	return
 }
 
-/* Overall function to parse and assemble http request.  Primarily used by `Inventory.executeQuery` */
-func parseRequest(index string, resultSize int64, r *http.Request) (query map[string]interface{}, err error) {
-	var (
-		bodyReq  map[string]interface{}
-		paramReq map[string]interface{}
-	)
-
-	if paramReq, err = parseRequestQueryParams(r); err != nil {
-		return
-	}
-
-	if bodyReq, err = ParseRequestBody(r); err == nil {
-		// Overrite param fields with body if they overlap or add. Body takes precedence.
-		for k, v := range bodyReq {
-			paramReq[k] = v
-		}
-	}
+// Build elasticsearch query from user query and options. It wraps 2 other helper functions.
+func buildElasticsearchQuery(index string, resultSize int64, paramReq map[string]interface{}, opts map[string][]string) (query map[string]interface{}, err error) {
 
 	if _, ok := paramReq["id"]; ok {
 		// Elasticsearch translation
@@ -265,52 +287,18 @@ func parseRequest(index string, resultSize int64, r *http.Request) (query map[st
 		delete(paramReq, "id")
 	}
 
-	if query, err = parseSearchRequest(index, paramReq); err != nil {
+	if query, err = buildElasticsearchBaseQuery(index, paramReq); err != nil {
 		return
 	}
 
+	// Add global options i.e. from, size etc...
 	var searchOpts map[string]interface{}
-	if searchOpts, err = BuildSearchOptions(resultSize, r.URL.Query()); err != nil {
+	if searchOpts, err = buildElasticsearchQueryOptions(resultSize, opts); err != nil {
 		return
-	} else {
-		// Add options including aggregations
-		for k, v := range searchOpts {
-			query[k] = v
-		}
 	}
-	return
-}
-
-func containsNullFields(req *map[string]interface{}) bool {
-	for _, v := range *req {
-		if v == nil {
-			return true
-		}
-	}
-	return false
-}
-
-/* Convert a given number to an int64 */
-func parseVersion(ver interface{}) (verInt int64, err error) {
-	switch ver.(type) {
-	case float64:
-		verF, _ := ver.(float64)
-		verInt = int64(verF)
-		break
-	case int64:
-		verInt, _ = ver.(int64)
-		break
-	case int:
-		verI, _ := ver.(int)
-		verInt = int64(verI)
-		break
-	case string:
-		verStr, _ := ver.(string)
-		verInt, err = strconv.ParseInt(verStr, 10, 64)
-		break
-	default:
-		err = fmt.Errorf("Could not parse version: %v", ver)
-		break
+	// Add options including aggregations
+	for k, v := range searchOpts {
+		query[k] = v
 	}
 
 	return
@@ -323,16 +311,16 @@ func assembleAssetFromHit(hit elastigo.Hit) (asset BaseAsset, err error) {
 	if err = json.Unmarshal(*hit.Fields, &fields); err != nil {
 		return
 	}
-
+	//fmt.Println(fields)
 	asset.Timestamp = fields["_timestamp"]
 
 	err = json.Unmarshal(*hit.Source, &asset.Data)
 	return
 }
 
+// Copy current asset data to the new one as removing fields requires a full index.
+// Skip over fields that are already in updated asset.
 func assembleAssetUpdate(curr, update *BaseAsset) {
-	// Copy current asset data to the new one as removing fields requires a full index.
-	// Skip over fields that are already in updated asset.
 	for currK, currV := range curr.Data {
 		// Do not update field in `update` asset from `curr` asset
 		if _, ok := update.Data[currK]; ok {

@@ -16,17 +16,13 @@ var INTERNAL_FIELDS = []string{
 	"created_by", "updated_by", "created_on",
 }
 
-/* ESS type mapping */
-type TypeMapping struct {
-	Id               interface{}            `json:"_id"`
-	Timestamp        interface{}            `json:"_timestamp"`
-	Properties       map[string]interface{} `json:"properties"`
-	DynamicTemplates []interface{}          `json:"dynamic_templates"`
-}
-
 type AggregatedItem struct {
 	Name  string `json:"name"`
 	Count int64  `json:"count"`
+}
+
+type ResourceType struct {
+	AggregatedItem
 }
 
 type BaseAsset struct {
@@ -119,22 +115,3 @@ func (cs *VindaluClusterStatus) ClusterMemberAddrs() (addrs []string) {
 	}
 	return
 }
-
-/* Currently only reference */
-
-/*
-type IDatastore interface {
-	GetAsset(assetType, assetId string) (BaseAsset, error)
-	GetAssetVersion(assetType, assetId string, version int64) (BaseAsset, error)
-	GetAssetVersions(assetType, assetId string, count int64) ([]BaseAsset, error)
-
-	CreateAsset(asset BaseAsset, createType bool) (string, error)
-
-	EditAsset(updatedAsset *BaseAsset) (string, error)
-	RemoveAsset(assetType, assetId string) error
-
-	ListAssetTypes() ([]AssetTypeItem, error)
-
-	ClusterStatus() (ClusterStatus, error)
-}
-*/

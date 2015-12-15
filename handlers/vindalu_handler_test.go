@@ -34,14 +34,14 @@ func TestMain(m *testing.M) {
 	tv["mappings_dir"] = "../etc/mappings"
 	testInvCfg.Datastore.Config = tv
 
-	var err error
-	testDS, err = core.GetDatastore(&testInvCfg.Datastore, testLogger)
+	//var err error
+	//testDS, err = core.GetDatastore(&testInvCfg.Datastore, testLogger)
+
+	vc, err := core.NewVindaluCore(&testInvCfg, testLogger)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	vc := core.NewVindaluCore(&testInvCfg, testDS, testLogger)
 
 	testInv = NewVindaluApiHandler(vc, testLogger)
 

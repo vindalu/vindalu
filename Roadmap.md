@@ -1,14 +1,10 @@
 Roadmap
 --------
 
-0.5.0
------
-* Project moved to `vindalu/vindalu`
+These are features that still need to be added (not necessarily in this order):
+
 * Role based access control on resource types.
 * Resource type linking.
-
-Todo
-----
 * `type` metadata
 * Batch writes.
 * Token revocation
