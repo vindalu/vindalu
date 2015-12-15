@@ -17,7 +17,8 @@ URL = https://github.com/vindalu/vindalu
 	go clean -i ./...
 
 .deps:
-	go get -v -d ./...
+	go get github.com/tools/godep
+	godep restore
 	[ -d "${BIN_DIR}" ] || mkdir -p ${BIN_DIR}
 
 .test:

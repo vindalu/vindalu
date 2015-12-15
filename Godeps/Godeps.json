@@ -1,9 +1,6 @@
 {
 	"ImportPath": "github.com/vindalu/vindalu",
 	"GoVersion": "go1.4.3",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/abbot/go-http-auth",
@@ -84,16 +81,6 @@
 		{
 			"ImportPath": "github.com/pmezard/go-difflib/difflib",
 			"Rev": "f78a839676152fd9f4863704f5d516195c18fc14"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/bcrypt",
-			"Comment": "null-236",
-			"Rev": "'69e2a90ed92d03812364aeb947b7068dc42e561e'"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/blowfish",
-			"Comment": "null-236",
-			"Rev": "'69e2a90ed92d03812364aeb947b7068dc42e561e'"
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
