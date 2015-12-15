@@ -1,0 +1,108 @@
+{
+	"ImportPath": "github.com/vindalu/vindalu",
+	"GoVersion": "go1.4.3",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/abbot/go-http-auth",
+			"Comment": "v0.3-2-gfa194fe",
+			"Rev": "fa194fe927580ca87aae2e747412dd39eafee1e8"
+		},
+		{
+			"ImportPath": "github.com/araddon/gou",
+			"Rev": "0c2ab7394d785afff14c983fedce4be70ccc431f"
+		},
+		{
+			"ImportPath": "github.com/bitly/go-hostpool",
+			"Rev": "d0e59c22a56e8dadfed24f74f452cea5a52722d2"
+		},
+		{
+			"ImportPath": "github.com/dgrijalva/jwt-go",
+			"Comment": "v2.3.0-6-gf62f64e",
+			"Rev": "f62f64ea222e5e6d6d86421b5507b0862a3ebf7f"
+		},
+		{
+			"ImportPath": "github.com/go-ldap/ldap",
+			"Comment": "v2.1",
+			"Rev": "90b1711ae8a4d6aef7576dfe0bc48def3f3ffcf4"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "1c83b3eabd45b6d76072b66b746c20815fb2872d"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "ad4d7a5882b961e07e2626045eb995c022ac6664"
+		},
+		{
+			"ImportPath": "github.com/mattbaird/elastigo/lib",
+			"Comment": "v1.0-258-g451c29b",
+			"Rev": "451c29b3ae220cd710294bc3436e293d99491b94"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/auth",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/conf",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/hash",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/hashmap",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/logger",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/server",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/gnatsd/sublist",
+			"Comment": "v0.6.8-26-g1145d9c",
+			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+		},
+		{
+			"ImportPath": "github.com/nats-io/nats",
+			"Comment": "v1.1.2-7-g3d9fd81",
+			"Rev": "3d9fd81a36deb7090cf921436f92f6a53b89d25f"
+		},
+		{
+			"ImportPath": "github.com/pmezard/go-difflib/difflib",
+			"Rev": "f78a839676152fd9f4863704f5d516195c18fc14"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Comment": "null-236",
+			"Rev": "'69e2a90ed92d03812364aeb947b7068dc42e561e'"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Comment": "null-236",
+			"Rev": "'69e2a90ed92d03812364aeb947b7068dc42e561e'"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "cd8c2701a5e10f044db915e65eac68f738399d22"
+		},
+		{
+			"ImportPath": "gopkg.in/asn1-ber.v1",
+			"Comment": "v1.1",
+			"Rev": "4e86f4367175e39f69d9358a5f17b4dda270378d"
+		}
+	]
+}
