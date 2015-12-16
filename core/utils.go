@@ -112,31 +112,41 @@ func parseVersion(ver interface{}) (verInt int64, err error) {
 	return
 }
 
+func parseSortOptions(sortOpts []string) (sopts []map[string]string, err error) {
+
+	sopts = make([]map[string]string, len(sortOpts))
+
+	for i, sval := range sortOpts {
+		keyOrder := strings.Split(sval, ":")
+		switch len(keyOrder) {
+		case 1:
+			//Case 1: no sorting order specified, do ascending by default
+			sopts[i] = map[string]string{keyOrder[0]: "asc"}
+			break
+		case 2:
+			//Case 2: sorting order specified, do what it says
+			if keyOrder[1] != "asc" && keyOrder[1] != "desc" {
+				err = fmt.Errorf("Sort must be in `key:[asc desc]` format")
+				return
+			}
+			sopts[i] = map[string]string{keyOrder[0]: keyOrder[1]}
+			break
+		default:
+			err = fmt.Errorf("Sort must be in `key:[asc desc]` format")
+			return
+		}
+	}
+	return
+}
+
 func ParseGlobalParams(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
 	qopts = map[string]interface{}{}
 	for k, v := range reqOpts {
 		switch k {
 		case "sort":
-			sopts := make([]map[string]string, len(reqOpts[k]))
-			for i, sval := range reqOpts[k] {
-				keyOrder := strings.Split(sval, ":")
-				switch len(keyOrder) {
-				//Case 1: no sorting order specified, do ascending by default
-				//Case 2: sorting order specified, do what it says
-				case 1:
-					sopts[i] = map[string]string{keyOrder[0]: "asc"}
-					break
-				case 2:
-					if keyOrder[1] != "asc" && keyOrder[1] != "desc" {
-						err = fmt.Errorf("Sort must be in `key:[asc desc]` format")
-						return
-					}
-					sopts[i] = map[string]string{keyOrder[0]: keyOrder[1]}
-					break
-				default:
-					err = fmt.Errorf("Sort must be in `key:[asc desc]` format")
-					return
-				}
+			var sopts []map[string]string
+			if sopts, err = parseSortOptions(reqOpts[k]); err != nil {
+				return
 			}
 			qopts["sort"] = sopts
 			break
@@ -179,6 +189,7 @@ func ParseGlobalParams(defaultResultSize int64, reqOpts map[string][]string) (qo
 		reqOpts : request params
 */
 func buildElasticsearchQueryOptions(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
+
 	if qopts, err = ParseGlobalParams(defaultResultSize, reqOpts); err != nil {
 		return
 	}
@@ -190,6 +201,17 @@ func buildElasticsearchQueryOptions(defaultResultSize int64, reqOpts map[string]
 	}
 
 	return
+}
+
+func buildElasticsearchQueryOptions2(qo QueryOptions) map[string]interface{} {
+	m := qo.Map()
+	if len(qo.Aggregate) > 0 {
+		m["aggs"] = buildElasticsearchAggregateQuery(qo.Aggregate, qo.Size)
+		// size is set in aggregate query so remove from top level
+		m["size"] = 0
+		delete(m, "from")
+	}
+	return m
 }
 
 func buildElasticsearchAggregateQuery(field string, resultSize interface{}) map[string]interface{} {

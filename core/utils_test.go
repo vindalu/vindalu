@@ -10,6 +10,22 @@ import (
 	"github.com/vindalu/vindalu/config"
 )
 
+var (
+	testSortOpts = []string{"prop1:asc", "prop2:desc"}
+)
+
+func Test_parseSortOptions(t *testing.T) {
+
+	sProps, err := parseSortOptions(testSortOpts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(sProps) != 2 || sProps[0]["prop1"] != "asc" || sProps[1]["prop2"] != "desc" {
+		t.Fatalf("sort options: %v\n", testSortOpts)
+	}
+}
+
 func Test_regexFilter(t *testing.T) {
 
 	type Input struct {

@@ -3,10 +3,13 @@ package core
 import (
 	elastigo "github.com/mattbaird/elastigo/lib"
 
+	"strconv"
 	"strings"
 )
 
-const MAX_ASSET_TYPES = 100000
+const (
+	MAX_ASSET_TYPES = 100000
+)
 
 var DEFAULT_FIELDS = map[string]interface{}{
 	"fields": "_source,_timestamp",
@@ -19,6 +22,46 @@ var INTERNAL_FIELDS = []string{
 type AggregatedItem struct {
 	Name  string `json:"name"`
 	Count int64  `json:"count"`
+}
+
+type QueryOptions struct {
+	From      int64               // starting point
+	Size      int64               // dataset size (from starting point)
+	Sort      []map[string]string // <property>:asc, <property>:desc
+	Aggregate string              // property
+}
+
+func NewQueryOptions(req map[string][]string) (qo QueryOptions, err error) {
+	qo = QueryOptions{}
+	for k, v := range req {
+		switch k {
+		case "from":
+			qo.From, err = strconv.ParseInt(v[0], 10, 64)
+		case "size":
+			qo.Size, err = strconv.ParseInt(v[0], 10, 64)
+		case "sort":
+			qo.Sort, err = parseSortOptions(v)
+		case "aggregate":
+			qo.Aggregate = strings.TrimSpace(v[0])
+		}
+		if err != nil {
+			break
+		}
+	}
+
+	return
+}
+
+// Data as map
+func (qo *QueryOptions) Map() map[string]interface{} {
+	m := make(map[string]interface{})
+	m["from"] = qo.From
+	m["size"] = qo.Size
+	m["sort"] = qo.Sort
+	if len(qo.Aggregate) > 0 {
+		m["aggregate"] = qo.Aggregate
+	}
+	return m
 }
 
 type ResourceType struct {

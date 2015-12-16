@@ -393,7 +393,7 @@ func (ds *ElasticsearchDatastore) execAggrQuery(index, assetType, field string, 
 				break
 			}
 		}
-		ds.log.Noticef("%s\n", resp.Aggregations)
+		//ds.log.Noticef("%s\n", resp.Aggregations)
 	}
 	return
 }
