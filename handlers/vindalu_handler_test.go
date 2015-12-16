@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	testCfgfile = "../etc/vindalu.json.sample"
+	testCfgfile      = "../etc/vindalu.json.sample"
+	testHandlerIndex = "test_handler_index"
 
 	testInvCfg config.InventoryConfig
 	_          = config.LoadConfig(testCfgfile, &testInvCfg)
@@ -32,10 +33,8 @@ func TestMain(m *testing.M) {
 
 	tv, _ := testInvCfg.Datastore.Config.(map[string]interface{})
 	tv["mappings_dir"] = "../etc/mappings"
+	tv["index"] = testHandlerIndex
 	testInvCfg.Datastore.Config = tv
-
-	//var err error
-	//testDS, err = core.GetDatastore(&testInvCfg.Datastore, testLogger)
 
 	vc, err := core.NewVindaluCore(&testInvCfg, testLogger)
 	if err != nil {

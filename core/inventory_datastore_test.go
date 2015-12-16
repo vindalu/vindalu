@@ -139,6 +139,14 @@ func Test_InventoryDatastore_EditAsset_RemoveField_required(t *testing.T) {
 	}
 }
 
+func Test_InventoryDatastore_GetVersions(t *testing.T) {
+	versions, err := testIds.GetVersions(testAssetType, testAssetId, 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(versions)
+}
+
 func Test_InventoryDatastore_ListTypes(t *testing.T) {
 	types, err := testIds.ListTypes()
 	if err != nil {

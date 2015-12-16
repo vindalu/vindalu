@@ -166,8 +166,7 @@ func (ir *VindaluApiHandler) AssetWriteRequestHandler(w http.ResponseWriter, r *
 		assetId   = mux.Vars(r)["asset"]
 		reqUser   = context.Get(r, Username).(string)
 	)
-
-	//ir.apiLog.Debugf("User: %s\n", reqUser)
+	//ir.apiLog.Tracef("User: %s\n", reqUser)
 
 	switch r.Method {
 	case "POST", "PUT":
