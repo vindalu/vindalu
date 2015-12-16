@@ -183,7 +183,6 @@ The following verbs and endpoints are available:
 |                                           | OPTIONS | Get ACL's and usage
 | **/v3/raw**                               | GET     | Pass-through request to elasticsearch index
 | **/v3/raw/versions**                      | GET     | Pass-through request to elasticsearch versions index
-| **/v3/events/< event >**                  | N/A     | Websocket to subscribe to events.
 | **/v3/search**                            | GET     | Search
 | **/config**                               | GET     | Get config
 | **/auth/access_token**                    | POST    | Get access token
