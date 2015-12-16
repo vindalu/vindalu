@@ -170,9 +170,8 @@ func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{
 	e.log.Tracef("%#v\n", essQuery)
 
 	// Aggregate queries
-	if _, ok := essQuery["aggregate"]; ok {
-		aggrProps := essQuery["aggregate"].([]string)
-		rslt, err = e.execAggrQuery(index2use, rtype, aggrProps[0], essQuery)
+	if _, ok := essQuery["aggs"]; ok {
+		rslt, err = e.execAggrQuery(index2use, rtype, opts["aggregate"][0], essQuery)
 	} else {
 		var srchRslt elastigo.SearchResult
 		if srchRslt, err = e.Conn.Search(index2use, rtype, DEFAULT_FIELDS, essQuery); err != nil {
