@@ -58,7 +58,9 @@ func NewElasticsearchDatastore(datastoreCfg *config.DatastoreConfig, log server.
 	}
 
 	if !ed.Conn.IndexExists(ed.Index) {
-		return &ed, ed.initializeIndex()
+		if err = ed.initializeIndex(); err != nil {
+			return nil, err
+		}
 	}
 
 	ed.log.Debugf("Elasticsearch (%s): %s:%d/%s\n", ed.Index, cfg.Host, cfg.Port, cfg.Index)
