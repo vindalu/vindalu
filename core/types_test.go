@@ -60,6 +60,18 @@ func Test_NewQueryOptions_error(t *testing.T) {
 	}
 }
 
+func Test_NewQueryOptions_error2(t *testing.T) {
+	_, err := NewQueryOptions(map[string][]string{
+		"sort": []string{"name:err"},
+		"size": []string{"128"},
+		"from": []string{"80"},
+	})
+
+	if err == nil {
+		t.Fatalf("Error not caught")
+	}
+}
+
 func Test_BaseAsset_GetVersion(t *testing.T) {
 	if testBa.GetVersion() == int64(-1) || testBa.GetVersion() != int64(1) {
 		fmt.Println(testBa.GetVersion())

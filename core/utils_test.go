@@ -115,29 +115,14 @@ func Test_validateEnforcedFields(t *testing.T) {
 	}
 }
 
-func Best_buildElasticsearchQueryOptions(t *testing.T) {
-	var defaultSize int64 = 64
-
-	reqOpts1 := map[string][]string{
+func Test_buildElasticsearchQueryOptions_case1(t *testing.T) {
+	qOpts1, _ := NewQueryOptions(map[string][]string{
 		"sort": []string{"name:asc", "age:desc", "title"},
 		"size": []string{"128"},
 		"from": []string{"80"},
-	}
-	reqOpts2 := map[string][]string{
-		"sort": []string{"name:err"},
-		"size": []string{"128"},
-		"from": []string{"80"},
-	}
-	reqOpts3 := map[string][]string{
-		"size": []string{"128"},
-	}
-	reqOpts4 := map[string][]string{
-		"from": []string{"80"},
-	}
-	reqOpts5 := map[string][]string{}
+	})
+	qopts1 := buildElasticsearchQueryOptions(qOpts1)
 
-	//Test case 1
-	qopts1, _ := buildElasticsearchQueryOptions(defaultSize, reqOpts1)
 	//Type assertion
 	if qopts1["size"].(int64) != 128 || qopts1["from"].(int64) != 80 {
 		t.Fatalf("Parser returned wrong size or from")
@@ -160,24 +145,15 @@ func Best_buildElasticsearchQueryOptions(t *testing.T) {
 			}
 		}
 	}
-	//Test case 2
-	_, err := buildElasticsearchQueryOptions(defaultSize, reqOpts2)
-	if err == nil {
-		t.Fatalf("Error not catched")
-	}
-	//Test case 3
-	qopts3, _ := buildElasticsearchQueryOptions(defaultSize, reqOpts3)
+}
+
+func Test_buildElasticsearchQueryOptions_case3(t *testing.T) {
+	qOpts3, _ := NewQueryOptions(map[string][]string{
+		"size": []string{"128"},
+	})
+
+	qopts3 := buildElasticsearchQueryOptions(qOpts3)
 	if qopts3["size"].(int64) != 128 || qopts3["from"].(int64) != 0 {
-		t.Fatalf("Parser returned wrong size or from")
-	}
-	//Test case 4
-	qopts4, _ := buildElasticsearchQueryOptions(defaultSize, reqOpts4)
-	if qopts4["size"].(int64) != defaultSize || qopts4["from"].(int64) != 80 {
-		t.Fatalf("Parser returned wrong size or from")
-	}
-	//Test case 5, when input is empty
-	qopts5, _ := buildElasticsearchQueryOptions(defaultSize, reqOpts5)
-	if qopts5["size"].(int64) != defaultSize || qopts5["from"].(int64) != 0 {
 		t.Fatalf("Parser returned wrong size or from")
 	}
 }
@@ -186,26 +162,26 @@ func Test_buildElasticsearchQuery(t *testing.T) {
 	q := map[string]interface{}{
 		"os": "ubuntu", "release": ">5",
 	}
-	opts := map[string][]string{
+	opts, _ := NewQueryOptions(map[string][]string{
 		"size": []string{"100"},
-	}
+	})
 
 	//jsonStr := []byte(`{"os":"ubuntu", "release":">5"}`)
 	//r, _ := http.NewRequest("GET", "http://localhost:5454/v1/pool?size=100", bytes.NewBuffer(jsonStr))
-	_, err := buildElasticsearchQuery("testIndex", 1000, q, opts)
+	_, err := buildElasticsearchQuery("testIndex", q, &opts)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	opts["from"] = []string{"0"}
+	opts.From = 0
 	//r, _ = http.NewRequest("GET", "http://localhost:5454/v1/pool?from=0&size=100", bytes.NewBuffer(jsonStr))
-	_, err = buildElasticsearchQuery("testIndex", 1000, q, opts)
+	_, err = buildElasticsearchQuery("testIndex", q, &opts)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	//r, _ = http.NewRequest("GET", "http://localhost:5454/v1/pool?from=0&size=100", nil)
-	_, err = buildElasticsearchQuery("testIndex", 1000, nil, opts)
+	_, err = buildElasticsearchQuery("testIndex", nil, &opts)
 	if err != nil {
 		t.Fatal(err)
 	}

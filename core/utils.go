@@ -139,77 +139,15 @@ func parseSortOptions(sortOpts []string) (sopts []map[string]string, err error) 
 	return
 }
 
-func ParseGlobalParams(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
-	qopts = map[string]interface{}{}
-	for k, v := range reqOpts {
-		switch k {
-		case "sort":
-			var sopts []map[string]string
-			if sopts, err = parseSortOptions(reqOpts[k]); err != nil {
-				return
-			}
-			qopts["sort"] = sopts
-			break
-		case "size":
-			if qopts["size"], err = strconv.ParseInt(v[0], 10, 64); err != nil {
-				return
-			}
-			// Set from to 0 (i.e start) if not specified
-			if _, ok := reqOpts["from"]; !ok {
-				qopts["from"] = int64(0)
-			}
-			break
-		case "from":
-			if qopts["from"], err = strconv.ParseInt(v[0], 10, 64); err != nil {
-				return
-			}
-			// Set size to max if not provided
-			if _, ok := reqOpts["size"]; !ok {
-				qopts["size"] = defaultResultSize
-			}
-			break
-		}
-	}
-
-	// Neither got added so default them.
-	if _, ok := qopts["from"]; !ok {
-		qopts["from"] = int64(0)
-		qopts["size"] = defaultResultSize
-	}
-
-	return
-}
-
-/*
-	Parse and extract search options from request parameters for ess.
-
-	Args:
-
-		defaultResultSize : result size to return (default: as specified in config)
-		reqOpts : request params
-*/
-func buildElasticsearchQueryOptions(defaultResultSize int64, reqOpts map[string][]string) (qopts map[string]interface{}, err error) {
-
-	if qopts, err = ParseGlobalParams(defaultResultSize, reqOpts); err != nil {
-		return
-	}
-
-	if val, ok := reqOpts["aggregate"]; ok {
-		qopts["aggs"] = buildElasticsearchAggregateQuery(val[0], qopts["size"])
-		qopts["size"] = 0
-		delete(qopts, "from")
-	}
-
-	return
-}
-
-func buildElasticsearchQueryOptions2(qo QueryOptions) map[string]interface{} {
+func buildElasticsearchQueryOptions(qo QueryOptions) map[string]interface{} {
 	m := qo.Map()
 	if len(qo.Aggregate) > 0 {
+		delete(m, "aggregate")
 		m["aggs"] = buildElasticsearchAggregateQuery(qo.Aggregate, qo.Size)
 		// size is set in aggregate query so remove from top level
 		m["size"] = 0
 		delete(m, "from")
+
 	}
 	return m
 }
@@ -301,8 +239,8 @@ func buildElasticsearchBaseQuery(index string, req map[string]interface{}) (quer
 }
 
 // Build elasticsearch query from user query and options. It wraps 2 other helper functions.
-func buildElasticsearchQuery(index string, resultSize int64, paramReq map[string]interface{}, opts map[string][]string) (query map[string]interface{}, err error) {
-
+//func buildElasticsearchQuery(index string, resultSize int64, paramReq map[string]interface{}, opts map[string][]string) (query map[string]interface{}, err error) {
+func buildElasticsearchQuery(index string, paramReq map[string]interface{}, queryOpts *QueryOptions) (query map[string]interface{}, err error) {
 	if _, ok := paramReq["id"]; ok {
 		// Elasticsearch translation
 		paramReq["_id"] = paramReq["id"]
@@ -313,16 +251,15 @@ func buildElasticsearchQuery(index string, resultSize int64, paramReq map[string
 		return
 	}
 
-	// Add global options i.e. from, size etc...
-	var searchOpts map[string]interface{}
-	if searchOpts, err = buildElasticsearchQueryOptions(resultSize, opts); err != nil {
-		return
+	if queryOpts != nil {
+		// Add global options i.e. from, size etc...
+		searchOpts := buildElasticsearchQueryOptions(*queryOpts)
+		// Add options including aggregations
+		for k, v := range searchOpts {
+			query[k] = v
+		}
 	}
-	// Add options including aggregations
-	for k, v := range searchOpts {
-		query[k] = v
-	}
-
+	//fmt.Printf("%#v\n", query)
 	return
 }
 

@@ -93,7 +93,10 @@ func (ir *VindaluApiHandler) AssetTypeGetHandler(w http.ResponseWriter, r *http.
 
 	userQuery, err := parseQueryFromHttpRequest(r)
 	if err == nil {
-		rsp, err = ir.ExecuteQuery(assetType, userQuery, r.URL.Query())
+		var qo core.QueryOptions
+		if qo, err = core.NewQueryOptions(r.URL.Query()); err == nil {
+			rsp, err = ir.ExecuteQuery(assetType, userQuery, &qo)
+		}
 	}
 
 	if err != nil {

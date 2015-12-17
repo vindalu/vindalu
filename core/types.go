@@ -57,7 +57,9 @@ func (qo *QueryOptions) Map() map[string]interface{} {
 	m := make(map[string]interface{})
 	m["from"] = qo.From
 	m["size"] = qo.Size
-	m["sort"] = qo.Sort
+	if len(qo.Sort) > 0 {
+		m["sort"] = qo.Sort
+	}
 	if len(qo.Aggregate) > 0 {
 		m["aggregate"] = qo.Aggregate
 	}

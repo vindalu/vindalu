@@ -152,7 +152,7 @@ func (e *ElasticsearchDatastore) Remove(rtype, rid string) error {
 }
 
 // Query resource index or resource version index.
-func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{}, opts map[string][]string, defaultResultSize int64, versionQuery bool) (rslt interface{}, err error) {
+func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{}, opts *QueryOptions, versionQuery bool) (rslt interface{}, err error) {
 
 	var index2use string
 	// Lookup against versions table
@@ -162,7 +162,7 @@ func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{
 		index2use = e.Index
 	}
 
-	essQuery, err := buildElasticsearchQuery(index2use, defaultResultSize, query, opts)
+	essQuery, err := buildElasticsearchQuery(index2use, query, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -171,7 +171,7 @@ func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{
 
 	// Aggregate queries
 	if _, ok := essQuery["aggs"]; ok {
-		rslt, err = e.execAggrQuery(index2use, rtype, opts["aggregate"][0], essQuery)
+		rslt, err = e.execAggrQuery(index2use, rtype, opts.Aggregate, essQuery)
 	} else {
 		var srchRslt elastigo.SearchResult
 		if srchRslt, err = e.Conn.Search(index2use, rtype, DEFAULT_FIELDS, essQuery); err != nil {

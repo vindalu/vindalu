@@ -121,8 +121,11 @@ func (ir *VindaluCore) RemoveAsset(assetType, assetId string, versionMeta map[st
 }
 
 // Executes the query against the datastore
-func (ir *VindaluCore) ExecuteQuery(assetType string, userQuery map[string]interface{}, queryOpts map[string][]string) (rslt interface{}, err error) {
-	return ir.datastore.Query(assetType, userQuery, queryOpts, ir.cfg.DefaultResultSize, false)
+func (ir *VindaluCore) ExecuteQuery(assetType string, userQuery map[string]interface{}, queryOpts *QueryOptions) (rslt interface{}, err error) {
+	if queryOpts != nil && queryOpts.Size < 1 {
+		queryOpts.Size = ir.cfg.DefaultResultSize
+	}
+	return ir.datastore.Query(assetType, userQuery, queryOpts, false)
 }
 
 /* Exposed datastore methods */

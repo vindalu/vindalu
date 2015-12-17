@@ -147,6 +147,23 @@ func Test_InventoryDatastore_GetVersions(t *testing.T) {
 	t.Log(versions)
 }
 
+func Test_InventoryDatastore_aggregate_query(t *testing.T) {
+	opts, _ := NewQueryOptions(map[string][]string{
+		"aggregate": []string{"updated_by"},
+	})
+	rslt, err := testIds.Query(testAssetType, nil, &opts, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	aggs, ok := rslt.([]AggregatedItem)
+	if !ok {
+		t.Fatal("Wrong type")
+	}
+
+	t.Logf("%#v\n", aggs)
+}
+
 func Test_InventoryDatastore_ListTypes(t *testing.T) {
 	types, err := testIds.ListTypes()
 	if err != nil {
@@ -157,12 +174,10 @@ func Test_InventoryDatastore_ListTypes(t *testing.T) {
 }
 
 func Test_InventoryDatastore_ClusterStatus(t *testing.T) {
-	cs, err := testIds.ClusterStatus()
+	_, err := testIds.ClusterStatus()
 	if err != nil {
 		t.Fatalf("%s", err)
 	}
-
-	t.Logf("%#v", cs)
 }
 
 func Test_InventoryDatastore_RemoveAsset(t *testing.T) {

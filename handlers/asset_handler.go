@@ -213,7 +213,8 @@ func (ir *VindaluApiHandler) AssetVersionsHandler(w http.ResponseWriter, r *http
 		assetId   = restVars["asset"]
 	)
 	// Get search parameters
-	reqOpts, err := core.ParseGlobalParams(ir.Config().DefaultResultSize, r.URL.Query())
+	//reqOpts, err := core.ParseGlobalParams(ir.Config().DefaultResultSize, r.URL.Query())
+	reqOpts, err := core.NewQueryOptions(r.URL.Query())
 	//reqOpts, err := core.BuildElasticsearchQueryOptions(ir.Config().DefaultResultSize, r.URL.Query())
 	if err != nil {
 		code = 400
@@ -221,10 +222,10 @@ func (ir *VindaluApiHandler) AssetVersionsHandler(w http.ResponseWriter, r *http
 		headers["Content-Type"] = "text/plain"
 	} else {
 		// The count should come from a query param
-		versionCount, _ := reqOpts["size"].(int64)
-		ir.apiLog.Noticef("Requested version count: %d\n", versionCount)
+		//versionCount, _ := reqOpts["size"].(int64)
+		ir.apiLog.Debugf("Requested version count: %d\n", reqOpts.Size)
 
-		assetVersions, err := ir.GetResourceVersions(assetType, assetId, versionCount)
+		assetVersions, err := ir.GetResourceVersions(assetType, assetId, reqOpts.Size)
 		if err != nil {
 			code = 404
 			data = []byte(err.Error())
