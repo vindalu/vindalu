@@ -63,8 +63,8 @@ func NewElasticsearchDatastore(datastoreCfg *config.DatastoreConfig, log server.
 		}
 	}
 
-	ed.log.Debugf("Elasticsearch (%s): %s:%d/%s\n", ed.Index, cfg.Host, cfg.Port, cfg.Index)
-	ed.log.Debugf("Elasticsearch (%s): %s:%d/%s\n", ed.VersionIndex, cfg.Host, cfg.Port, ed.VersionIndex)
+	ed.log.Noticef("Elasticsearch (%s): %s:%d/%s\n", ed.Index, cfg.Host, cfg.Port, cfg.Index)
+	ed.log.Noticef("Elasticsearch (%s): %s:%d/%s\n", ed.VersionIndex, cfg.Host, cfg.Port, ed.VersionIndex)
 
 	// Apply mapping as they may have been updated.
 	if err = ed.Conn.ApplyMappingDir(ed.Index, cfg.MappingsDir, true); err != nil {

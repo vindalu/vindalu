@@ -49,8 +49,13 @@ var (
 	testIds    = NewInventoryDatastore(testEds, testAssetCfg, testLogger)
 )
 
-func Test_InventoryDatastore_CreateAssetType(t *testing.T) {
-	err := testIds.CreateAssetType(testCreateType, nil)
+func Test_InventoryDatastore_CreateAssetType_with_properties(t *testing.T) {
+	props := map[string]interface{}{
+		"properties": map[string]interface{}{
+			"foo": map[string]string{"type": "string"},
+		},
+	}
+	err := testIds.CreateAssetType(testCreateType, props)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -60,13 +65,8 @@ func Test_InventoryDatastore_CreateAssetType(t *testing.T) {
 	}
 }
 
-func Test_InventoryDatastore_CreateAssetType_with_properties(t *testing.T) {
-	props := map[string]interface{}{
-		"properties": map[string]interface{}{
-			"foo": map[string]string{"type": "string"},
-		},
-	}
-	err := testIds.CreateAssetType(testCreateType, props)
+func Test_InventoryDatastore_CreateAssetType(t *testing.T) {
+	err := testIds.CreateAssetType(testCreateType+"2", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
