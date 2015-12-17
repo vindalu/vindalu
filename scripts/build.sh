@@ -14,7 +14,7 @@ VERSION=$(cat etc/vindalu.json.sample | grep version | cut -d ' ' -f 6 | sed "s/
 # Image being created
 DOCKER_NAME="vindalu/${NAME}:${VERSION}"
 # Image to build the code
-BLD_DOCKER_IMAGE="golang:1.4.2"
+BLD_DOCKER_IMAGE="golang:1.4.3"
 # Image to build package 
 PKG_DOCKER_IMAGE="euforia/fpm"
 
@@ -24,6 +24,7 @@ which docker > /dev/null || {
     exit 2;
 }
 
+# Build phase
 cat <<BLDCODE
 
 Building
@@ -37,6 +38,7 @@ docker run --rm -v "$PWD":/go/src/${SCM_PATH} \
     exit 3
 }
 
+# Packaging phase
 cat <<PKG
 
 Packaging
@@ -49,6 +51,7 @@ docker run --rm -v "$PWD":/usr/src/${NAME} -w /usr/src/${NAME} $PKG_DOCKER_IMAGE
     exit 4
 }
 
+# Dockerizing phase
 cat <<DKRIMG
 
 Dockerizing
@@ -60,7 +63,8 @@ docker build --rm --force-rm -t $DOCKER_NAME . || {
     echo "Docker image build failed"
     exit 5
 }
-# Check build
+
+# Final check
 cat <<SMR
 
 Summary
