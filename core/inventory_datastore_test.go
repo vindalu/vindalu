@@ -140,7 +140,7 @@ func Test_InventoryDatastore_EditAsset_RemoveField_required(t *testing.T) {
 }
 
 func Test_InventoryDatastore_GetVersions(t *testing.T) {
-	versions, err := testIds.GetVersions(testAssetType, testAssetId, 10)
+	versions, err := testIds.GetVersions(testUpdateData.Type, testUpdateData.Id, 10)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -171,6 +171,18 @@ func Test_InventoryDatastore_ListTypes(t *testing.T) {
 	}
 
 	t.Logf("%#v", types)
+}
+
+func Test_InventoryDatastore_ListTypeProperties(t *testing.T) {
+	props, err := testIds.ListTypeProperties(testAssetType)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+	if len(props) < 3 {
+		t.Fatalf("Wrong no. of properties: %v\n", props)
+	}
+
+	t.Logf("%#v", props)
 }
 
 func Test_InventoryDatastore_ClusterStatus(t *testing.T) {
