@@ -12,9 +12,6 @@ import (
 
 /* Converts relative paths to absolute */
 func normalizeConfigPaths(cfg *InventoryConfig) {
-	//if !filepath.IsAbs(cfg.Datastore.Config.MappingsDir) {
-	//	cfg.Datastore.Config.MappingsDir, _ = filepath.Abs(cfg.Datastore.Config.MappingsDir)
-	//}
 
 	if !filepath.IsAbs(cfg.Auth.GroupsFile) {
 		cfg.Auth.GroupsFile, _ = filepath.Abs(cfg.Auth.GroupsFile)

@@ -38,6 +38,14 @@ type BaseAsset struct {
 	Data map[string]interface{} `json:"data"`
 }
 
+func NewBaseAsset(btype, bid string) *BaseAsset {
+	return &BaseAsset{
+		Id:   bid,
+		Type: btype,
+		Data: make(map[string]interface{}),
+	}
+}
+
 func (ba *BaseAsset) GetVersion() int64 {
 	if ba.Data != nil {
 		if _, ok := ba.Data["version"]; ok {
