@@ -9,6 +9,7 @@ import (
 
 	"github.com/vindalu/vindalu/config"
 	"github.com/vindalu/vindalu/simple-ess"
+	"github.com/vindalu/vindalu/types"
 )
 
 type EssDatastoreConfig struct {
@@ -154,7 +155,7 @@ func (e *ElasticsearchDatastore) Remove(rtype, rid string) error {
 }
 
 // Query resource index or resource version index.
-func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{}, opts *QueryOptions, versionQuery bool) (rslt interface{}, err error) {
+func (e *ElasticsearchDatastore) Query(rtype string, query map[string]interface{}, opts *types.QueryOptions, versionQuery bool) (rslt interface{}, err error) {
 
 	var index2use string
 	// Lookup against versions table

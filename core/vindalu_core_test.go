@@ -15,29 +15,30 @@ var (
 	testCfgfile = "../etc/vindalu.json.sample"
 
 	testInvCfg config.InventoryConfig
-	_          = config.LoadConfig(testCfgfile, &testInvCfg)
 
 	testLogger = logging.GetLogger("", "", false, false, false)
-	testDS     *InventoryDatastore
-
-	testDsCfg EssDatastoreConfig
 
 	testInv *VindaluCore
 )
 
 func TestMain(m *testing.M) {
 
+	err := config.LoadConfig(testCfgfile, &testInvCfg)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	testInvCfg.Auth.GroupsFile = "../etc/local-groups.json.sample"
 	testInvCfg.Events.ConfigFile = "../etc/gnatsd.conf"
 	testInvCfg.Auth.Config["htpasswd_file"] = "../etc/htpasswd"
 
+	// Datastore config
 	tv, _ := testInvCfg.Datastore.Config.(map[string]interface{})
 	tv["mappings_dir"] = "../etc/mappings"
 	testInvCfg.Datastore.Config = tv
 
-	var err error
-	testInv, err = NewVindaluCore(&testInvCfg, testLogger)
-	if err != nil {
+	if testInv, err = NewVindaluCore(&testInvCfg, testLogger); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -55,11 +56,9 @@ func Test_NewVindaluCore_error(t *testing.T) {
 }
 
 func Test_VindaluCore_ExecuteQuery(t *testing.T) {
-	//r, _ := http.NewRequest("GET", "/v3/virtualserver", bytes.NewBuffer([]byte(`{"status":"enabled"}`)))
 
 	q := map[string]interface{}{"status": "enabled"}
 
-	//if _, err := testInv.ExecuteQuery("virtualserver", r); err != nil {
 	if _, err := testInv.ExecuteQuery("virtualserver", q, nil); err != nil {
 		t.Fatalf("%s", err)
 	}
@@ -70,6 +69,19 @@ func Test_VindaluCore_ClusterStatus(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func Test_VindaluCore_ClusterMemberAddrs(t *testing.T) {
+	cs, err := testInv.ClusterStatus()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	addrs := cs.ClusterMemberAddrs()
+	if len(addrs) < 1 {
+		t.Fatal("No addresses returned")
+	}
+	t.Log(addrs)
 }
 
 /*

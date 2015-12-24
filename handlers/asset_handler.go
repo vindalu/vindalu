@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/vindalu/vindalu/core"
+	"github.com/vindalu/vindalu/types"
 	"github.com/vindalu/vindalu/versioning"
 )
 
@@ -214,7 +215,7 @@ func (ir *VindaluApiHandler) AssetVersionsHandler(w http.ResponseWriter, r *http
 	)
 	// Get search parameters
 	//reqOpts, err := core.ParseGlobalParams(ir.Config().DefaultResultSize, r.URL.Query())
-	reqOpts, err := core.NewQueryOptions(r.URL.Query())
+	reqOpts, err := types.NewQueryOptions(r.URL.Query())
 	//reqOpts, err := core.BuildElasticsearchQueryOptions(ir.Config().DefaultResultSize, r.URL.Query())
 	if err != nil {
 		code = 400

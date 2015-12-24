@@ -7,6 +7,7 @@ import (
 	"github.com/nats-io/gnatsd/server"
 
 	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/types"
 )
 
 type VindaluCore struct {
@@ -121,7 +122,7 @@ func (ir *VindaluCore) RemoveAsset(assetType, assetId string, versionMeta map[st
 }
 
 // Executes the query against the datastore
-func (ir *VindaluCore) ExecuteQuery(assetType string, userQuery map[string]interface{}, queryOpts *QueryOptions) (rslt interface{}, err error) {
+func (ir *VindaluCore) ExecuteQuery(assetType string, userQuery map[string]interface{}, queryOpts *types.QueryOptions) (rslt interface{}, err error) {
 	if queryOpts != nil && queryOpts.Size < 1 {
 		queryOpts.Size = ir.cfg.DefaultResultSize
 	}
@@ -129,11 +130,16 @@ func (ir *VindaluCore) ExecuteQuery(assetType string, userQuery map[string]inter
 }
 
 /* Exposed datastore methods */
+
 func (vc *VindaluCore) GetResource(rtype, rid string, version int64) (BaseAsset, error) {
 	return vc.datastore.Get(rtype, rid, version)
 }
 
 func (vc *VindaluCore) GetResourceVersions(rtype, rid string, versionCount int64) ([]BaseAsset, error) {
+	// By default return 10 versions
+	if versionCount < 1 {
+		return vc.datastore.GetVersions(rtype, rid, 10)
+	}
 	return vc.datastore.GetVersions(rtype, rid, versionCount)
 }
 
@@ -147,7 +153,7 @@ func (vc *VindaluCore) ListResourceTypes() ([]ResourceType, error) {
 
 func (vc *VindaluCore) ClusterStatus() (VindaluClusterStatus, error) {
 	// TODO: de-couple from datastore
-	return vc.datastore.ClusterStatus()
+	return GetClusterStatus(vc.datastore.Conn.Conn)
 }
 
 func (vc *VindaluCore) Config() *config.InventoryConfig {

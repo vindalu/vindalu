@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/types"
 )
 
 var (
@@ -148,7 +149,7 @@ func Test_InventoryDatastore_GetVersions(t *testing.T) {
 }
 
 func Test_InventoryDatastore_aggregate_query(t *testing.T) {
-	opts, _ := NewQueryOptions(map[string][]string{
+	opts, _ := types.NewQueryOptions(map[string][]string{
 		"aggregate": []string{"updated_by"},
 	})
 	rslt, err := testIds.Query(testAssetType, nil, &opts, false)
@@ -183,13 +184,6 @@ func Test_InventoryDatastore_ListTypeProperties(t *testing.T) {
 	}
 
 	t.Logf("%#v", props)
-}
-
-func Test_InventoryDatastore_ClusterStatus(t *testing.T) {
-	_, err := testIds.ClusterStatus()
-	if err != nil {
-		t.Fatalf("%s", err)
-	}
 }
 
 func Test_InventoryDatastore_RemoveAsset(t *testing.T) {

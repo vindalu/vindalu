@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/vindalu/vindalu/core"
+	"github.com/vindalu/vindalu/types"
 )
 
 var ASSET_TYPE_ACLS = map[string]string{
@@ -93,8 +94,8 @@ func (ir *VindaluApiHandler) AssetTypeGetHandler(w http.ResponseWriter, r *http.
 
 	userQuery, err := parseQueryFromHttpRequest(r)
 	if err == nil {
-		var qo core.QueryOptions
-		if qo, err = core.NewQueryOptions(r.URL.Query()); err == nil {
+		var qo types.QueryOptions
+		if qo, err = types.NewQueryOptions(r.URL.Query()); err == nil {
 			rsp, err = ir.ExecuteQuery(assetType, userQuery, &qo)
 		}
 	}

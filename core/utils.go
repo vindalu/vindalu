@@ -11,13 +11,12 @@ import (
 	elastigo "github.com/mattbaird/elastigo/lib"
 
 	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/types"
 )
 
 var (
 	// Special chars to trigger a regex search
 	RE_TRIGGER_CHARS = []string{"*", "+", "^", "$", "|"}
-	// Search parameter options
-	SEARCH_PARAM_OPTIONS = []string{"sort", "from", "size", "aggregate"}
 )
 
 /* Generate an ESS regex filter */
@@ -86,7 +85,7 @@ func validateEnforcedFields(cfg *config.AssetConfig, req map[string]interface{})
 	return nil
 }
 
-/* Convert a given number to an int64 */
+// Convert a given number to an int64
 func parseVersion(ver interface{}) (verInt int64, err error) {
 	switch ver.(type) {
 	case float64:
@@ -112,34 +111,7 @@ func parseVersion(ver interface{}) (verInt int64, err error) {
 	return
 }
 
-func parseSortOptions(sortOpts []string) (sopts []map[string]string, err error) {
-
-	sopts = make([]map[string]string, len(sortOpts))
-
-	for i, sval := range sortOpts {
-		keyOrder := strings.Split(sval, ":")
-		switch len(keyOrder) {
-		case 1:
-			//Case 1: no sorting order specified, do ascending by default
-			sopts[i] = map[string]string{keyOrder[0]: "asc"}
-			break
-		case 2:
-			//Case 2: sorting order specified, do what it says
-			if keyOrder[1] != "asc" && keyOrder[1] != "desc" {
-				err = fmt.Errorf("Sort must be in `key:[asc desc]` format")
-				return
-			}
-			sopts[i] = map[string]string{keyOrder[0]: keyOrder[1]}
-			break
-		default:
-			err = fmt.Errorf("Sort must be in `key:[asc desc]` format")
-			return
-		}
-	}
-	return
-}
-
-func buildElasticsearchQueryOptions(qo QueryOptions) map[string]interface{} {
+func buildElasticsearchQueryOptions(qo types.QueryOptions) map[string]interface{} {
 	m := qo.Map()
 	if len(qo.Aggregate) > 0 {
 		delete(m, "aggregate")
@@ -240,7 +212,7 @@ func buildElasticsearchBaseQuery(index string, req map[string]interface{}) (quer
 
 // Build elasticsearch query from user query and options. It wraps 2 other helper functions.
 //func buildElasticsearchQuery(index string, resultSize int64, paramReq map[string]interface{}, opts map[string][]string) (query map[string]interface{}, err error) {
-func buildElasticsearchQuery(index string, paramReq map[string]interface{}, queryOpts *QueryOptions) (query map[string]interface{}, err error) {
+func buildElasticsearchQuery(index string, paramReq map[string]interface{}, queryOpts *types.QueryOptions) (query map[string]interface{}, err error) {
 	if _, ok := paramReq["id"]; ok {
 		// Elasticsearch translation
 		paramReq["_id"] = paramReq["id"]

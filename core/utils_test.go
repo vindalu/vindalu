@@ -8,23 +8,8 @@ import (
 	"testing"
 
 	"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/types"
 )
-
-var (
-	testSortOpts = []string{"prop1:asc", "prop2:desc"}
-)
-
-func Test_parseSortOptions(t *testing.T) {
-
-	sProps, err := parseSortOptions(testSortOpts)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(sProps) != 2 || sProps[0]["prop1"] != "asc" || sProps[1]["prop2"] != "desc" {
-		t.Fatalf("sort options: %v\n", testSortOpts)
-	}
-}
 
 func Test_regexFilter(t *testing.T) {
 
@@ -116,7 +101,7 @@ func Test_validateEnforcedFields(t *testing.T) {
 }
 
 func Test_buildElasticsearchQueryOptions_case1(t *testing.T) {
-	qOpts1, _ := NewQueryOptions(map[string][]string{
+	qOpts1, _ := types.NewQueryOptions(map[string][]string{
 		"sort": []string{"name:asc", "age:desc", "title"},
 		"size": []string{"128"},
 		"from": []string{"80"},
@@ -148,7 +133,7 @@ func Test_buildElasticsearchQueryOptions_case1(t *testing.T) {
 }
 
 func Test_buildElasticsearchQueryOptions_case3(t *testing.T) {
-	qOpts3, _ := NewQueryOptions(map[string][]string{
+	qOpts3, _ := types.NewQueryOptions(map[string][]string{
 		"size": []string{"128"},
 	})
 
@@ -162,7 +147,7 @@ func Test_buildElasticsearchQuery(t *testing.T) {
 	q := map[string]interface{}{
 		"os": "ubuntu", "release": ">5",
 	}
-	opts, _ := NewQueryOptions(map[string][]string{
+	opts, _ := types.NewQueryOptions(map[string][]string{
 		"size": []string{"100"},
 	})
 

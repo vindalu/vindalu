@@ -1,12 +1,10 @@
 package core
 
 import (
-	"encoding/json"
 	"fmt"
 	"regexp"
 	"time"
 
-	elastigo "github.com/mattbaird/elastigo/lib"
 	"github.com/nats-io/gnatsd/server"
 
 	"github.com/vindalu/vindalu/config"
@@ -181,28 +179,5 @@ func (e *InventoryDatastore) CreateAssetVersion(asset BaseAsset) (version int64,
 	// Create specified version
 	_, err = e.Create(asset, version)
 
-	return
-}
-
-func (ds *InventoryDatastore) ClusterStatus() (cs VindaluClusterStatus, err error) {
-	// Call this manually as I can't seem to get at the info from the framework
-	var b []byte
-	if b, err = ds.Conn.DoCommand("GET", "/_cluster/state", nil, nil); err != nil {
-		return
-	}
-	//ds.log.Tracef("%#v\n", stateResp)
-
-	cs = VindaluClusterStatus{}
-	if err = json.Unmarshal(b, &cs); err != nil {
-		return
-	}
-
-	var essHealth elastigo.ClusterHealthResponse
-	if essHealth, err = ds.Conn.Health(); err != nil {
-		return
-	}
-
-	cs.Health = *NewClusterHealthFromEss(essHealth)
-	// TODO: add gnatsd config
 	return
 }
