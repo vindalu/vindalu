@@ -55,8 +55,8 @@ func TestMain(m *testing.M) {
 	retval := m.Run()
 
 	// Cleanup
-	//testInv.datastore.Conn.DeleteIndex("test_core")
-	//testInv.datastore.Conn.DeleteIndex("test_core_versions")
+	testInv.datastore.Conn.DeleteIndex("test_core")
+	testInv.datastore.Conn.DeleteIndex("test_core_versions")
 
 	os.Exit(retval)
 }
