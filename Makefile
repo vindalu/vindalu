@@ -13,6 +13,7 @@ EPOCH = $(shell date +%s)
 URL = https://github.com/vindalu/vindalu
 
 .clean:
+	rm -f coverage.out
 	rm -rf ${BUILD_BASE}
 	go clean -i ./...
 
