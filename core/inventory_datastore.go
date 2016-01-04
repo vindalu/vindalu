@@ -145,9 +145,7 @@ func (ds *InventoryDatastore) RemoveAsset(assetType, assetId string, versionMeta
 		}
 	}
 
-	_, err = ds.Create(emptyAsset, createdVersion+1)
-
-	// DONt remove - needs testing
+	// Dont remove - needs testing
 	/*
 		if _, err = ds.Conn.Index(ds.VersionIndex, emptyAsset.Type, emptyAsset.Id, nil, emptyAsset.Data); err != nil {
 			// TODO: maybe a rollback
@@ -155,6 +153,7 @@ func (ds *InventoryDatastore) RemoveAsset(assetType, assetId string, versionMeta
 			return nil, err
 		}
 	*/
+	_, err = ds.Create(emptyAsset, createdVersion+1)
 
 	return &asset, err
 }
@@ -166,7 +165,7 @@ func (e *InventoryDatastore) CreateAssetVersion(asset BaseAsset) (version int64,
 	if err != nil || len(versionedAssets) < 1 {
 		e.log.Errorf("Creating new version anyway (harmless): Error=%s; Count=%d\n", err, len(versionedAssets))
 		version = 1
-		// just in case as this var gets re-used
+		// Just in case as this var gets re-used
 		err = nil
 	} else {
 		// Find latest version

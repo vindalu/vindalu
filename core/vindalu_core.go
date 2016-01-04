@@ -20,13 +20,13 @@ type VindaluCore struct {
 	// Channel used to publish events to the main event system.
 	EventQ chan Event
 
+	// Multi-destination logger
 	log server.Logger
 }
 
 func NewVindaluCore(cfg *config.InventoryConfig, log server.Logger) (ir *VindaluCore, err error) {
 
 	ir = &VindaluCore{
-		//datastore: datastore,
 		cfg:    cfg,
 		EventQ: make(chan Event),
 		log:    log,
