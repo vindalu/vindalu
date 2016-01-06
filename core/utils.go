@@ -237,7 +237,7 @@ func buildElasticsearchQuery(index string, paramReq map[string]interface{}, quer
 
 func assembleAssetFromHit(hit elastigo.Hit) (asset BaseAsset, err error) {
 	asset = BaseAsset{Id: hit.Id, Type: hit.Type}
-	fmt.Printf("%#v\n", hit)
+	//fmt.Printf("%#v\n", hit)
 	var fields map[string]interface{}
 	if err = json.Unmarshal(*hit.Fields, &fields); err != nil {
 		return
