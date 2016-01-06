@@ -40,9 +40,9 @@ func Test_ExtendedEssConn_IndexExists(t *testing.T) {
 	e := NewExtendedEssConn(testEssHost, testEssPort)
 
 	if e.IndexExists(testIndex) {
-		t.Fatalf("Index should exist!")
+		t.Fatalf("Index should not exist!")
 	}
-	//e.DeleteIndex(e.Index)
+
 	//e.DeleteIndex(e.VersionIndex)
 	e.Close()
 }
@@ -65,13 +65,26 @@ func Test_ExtendedEssConn_IsVersionSupported(t *testing.T) {
 	}
 }
 
+func Test_ExtendedEssConn_ApplyMappingDir(t *testing.T) {
+	e := NewExtendedEssConn(testEssHost, testEssPort)
+
+	_, err := e.CreateIndex(testIndex)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err = e.ApplyMappingDir(testIndex, "../etc/mappings", true); err != nil {
+		t.Fatal(err)
+	}
+
+}
+
 func Test_ExtendedEssConn_GetPropertiesForType(t *testing.T) {
 	e := NewExtendedEssConn(testEssHost, testEssPort)
 	_, err := e.GetPropertiesForType(testIndex, "pool")
 	if err == nil {
 		t.Fatalf("Should have errored!")
 	}
-	//e.DeleteIndex(e.Index)
-	//e.DeleteIndex(e.VersionIndex)
-	e.Close()
+
+	e.DeleteIndex(testIndex)
 }

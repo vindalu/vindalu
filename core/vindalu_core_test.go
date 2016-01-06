@@ -173,6 +173,8 @@ func Test_VindaluCore_CreateAsset_new_type_admin(t *testing.T) {
 }
 
 func Test_VindaluCore_ExecuteQuery(t *testing.T) {
+	// Needed to force index.
+	testInv.datastore.Conn.Refresh("test_core")
 
 	q := map[string]interface{}{"status": "enabled"}
 
@@ -181,14 +183,14 @@ func Test_VindaluCore_ExecuteQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, ok := rslt.([]BaseAsset)
+	bas, ok := rslt.([]BaseAsset)
 	if !ok {
 		t.Fatal("Should be BaseAsset")
 	}
 
-	//if len(bas) < 1 {
-	//	t.Fatal("No results. Should have atleast 1")
-	//}
+	if len(bas) < 1 {
+		t.Fatal("No results. Should have atleast 1")
+	}
 }
 
 func Test_VindaluCore_RemoveAsset(t *testing.T) {
