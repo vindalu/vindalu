@@ -135,7 +135,7 @@ func (ds *InventoryDatastore) RemoveAsset(assetType, assetId string, versionMeta
 		Type:      assetType,
 		Id:        assetId,
 		Data:      map[string]interface{}{},
-		Timestamp: time.Now().Unix() * 1000,
+		Timestamp: float64(time.Now().UnixNano()) / 1000000,
 	}
 
 	// Add base metadata `updated_by` to deleted version for tracking

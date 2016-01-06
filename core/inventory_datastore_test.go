@@ -2,6 +2,7 @@ package core
 
 import (
 	"testing"
+	"time"
 
 	"github.com/vindalu/vindalu/config"
 	"github.com/vindalu/vindalu/types"
@@ -194,6 +195,20 @@ func Test_InventoryDatastore_RemoveAsset(t *testing.T) {
 	if _, err = testIds.Get(testAssetType, testData.Id, 0); err == nil {
 		t.Fatalf("Did not remove asset")
 	}
+
+	testIds.Conn.Refresh()
+
+	var vers []BaseAsset
+	if vers, err = testIds.GetVersions(testAssetType, testAssetId, 10); err != nil {
+		t.Fatal(err)
+	}
+
+	its, _ := vers[0].Timestamp.(float64)
+	ut := time.Unix(0, int64(its*1000000))
+	if ut.Year() == 1969 {
+		t.Fatal("Failed to parse time")
+	}
+
 	testIds.Conn.DeleteIndex(testIds.Index)
 	testIds.Conn.DeleteIndex(testIds.VersionIndex)
 	testIds.Close()
