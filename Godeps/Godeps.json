@@ -1,7 +1,6 @@
 {
 	"ImportPath": "github.com/vindalu/vindalu",
 	"GoVersion": "go1.4.3",
-	"Packages": ["./..."],
 	"Deps": [
 		{
 			"ImportPath": "github.com/abbot/go-http-auth",
@@ -41,38 +40,38 @@
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/auth",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/conf",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/hash",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/hashmap",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/logger",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/server",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/gnatsd/sublist",
-			"Comment": "v0.6.8-26-g1145d9c",
-			"Rev": "1145d9c731ecbd003a03c12a307805385cb59965"
+			"Comment": "v0.7.0",
+			"Rev": "5148f18c52d59f97cf62c2fc521cdc08d2981ac4"
 		},
 		{
 			"ImportPath": "github.com/nats-io/nats",
@@ -85,11 +84,13 @@
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
-			"Comment": "null-236"
+			"Comment": "null-236",
+			"Rev": ""
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
-			"Comment": "null-236"
+			"Comment": "null-236",
+			"Rev": ""
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
