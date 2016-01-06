@@ -8,9 +8,11 @@ The system can be useful to store/query/analyze information such as configuratio
 # Table of Contents
 1. [Installation](#installation)
 2. [Configuration](#configuration)
-3. [Auth Tokens](#auth-tokens)
-4. [User Guide](#user-guide)
-5. [Local Auth Groups](#local-auth-groups)
+3. [Starting the Service](#starting-the-service)
+4. [Auth Tokens](#auth-tokens)
+5. [User Guide](#user-guide)
+6. [Local Auth Groups](#local-auth-groups)
+7. [Development](#development)
 
 
 Installation
@@ -19,6 +21,7 @@ System packages are available for installation.  You can also manually build the
 
 #### Requirements
 
+    Godep (not needed for packaged install)
     go >= 1.4.2 (not needed for packaged install)
     elasticsearch >= 1.4.x
 
@@ -31,9 +34,11 @@ To perform a manual install continue to the section below:
     # Build and install
     $ go get github.com/vindalu/vindalu
     $ cd $GOPATH/src/github.com/vindalu/vindalu
+    $ godep restore
     $ make all
     
 This will install the the directory structure under `./build/opt/vindalu/`, which should be copied to `/opt/vindalu`.  Once copied change to that directory and proceed with configuration section.
+
 
 Configuration
 -------------
@@ -45,7 +50,7 @@ Start by copying the sample configuration files in the `etc` directory.
 Fill in the appropriate values keeping in mind that paths in the config file that do not start with `/` are treated as relative paths from the current working directory. After your configuration is complete you can start the service.  Here's a description of the various configuration options.
 
 ##### auth
-Auth is required for all write requests as well as to listen to event subscriptions.  By default `basic` http auth is enabled using the `etc/htpasswd` file.  The default credentials are `admin:vindalu`.  
+Auth is required for all write requests as well as to listen to event subscriptions.  By default `basic` http auth is enabled using the `etc/htpasswd` file.  The default credentials are `admin:vindaloo`.  
 
 The `groups_file` is used to specify which users are allowed to create asset types as per the `LocalAuthGroups`.  A sample config file is located under `etc/`.
 
@@ -72,9 +77,10 @@ Path to the web directory.
 
 The `version` field should not be touched. Changing this will prevent the process from starting up.
 
+
 Starting the Service
 --------------------
-Once the installation and configuration is complete, you'll need to make sure elasticsearch is restarted.  To do so run the following as necessary:
+Once the installation and configuration are complete, you'll need to make sure elasticsearch is restarted.  To do so run the following as necessary:
 
     $ /etc/init.d/elasticsearch restart
 
@@ -82,7 +88,7 @@ Once elasticsearch is running (it can take some time to become available), execu
 
     $ ./bin/vindalu-ctl start
 
-You can now start using the system.
+You can now start using the system by using this `http://localhost:5454` url.
 
 
 User Guide
@@ -100,68 +106,6 @@ Versions are automatically created on each write.  When a write occurs, the exis
 ### Asset
 Each asset must have an associated type.  Before an asset can be created, the asset type must be created.  As mentioned before, only admins are allowed to create new asset types. An asset has versions available.  These are only available after the first write operation.  A `current` asset has no version.  
 
-### Events
-If enabled events are fired on all `write` actions.  The available event types are:
-
-Event type         | Payload 
--------------------|---------------------
-assettype.created  | Asset type id
-asset.created      | Complete asset data
-asset.updated      | Updated asset data
-asset.deleted      | Asset id
-
-Below are samples for each type:
-
-##### assettype.created
-
-    {
-        "type": "assettype.created",
-        "timestamp": "....",
-        "payload": {
-            "id": "loadbalancer"
-        }
-    } 
-
-##### asset.created
-
-    {
-        "type": "asset.created",
-        "timestamp": "....",
-        "payload": {
-            "id": "foo.bar.org",
-            "type": "virtualserver",
-            "timestamp": "...",
-            "data": {
-                "user_supplied": "data_on_creation"
-            }
-        }
-    }
-
-##### asset.updated
-
-    {
-        "type": "asset.updated",
-        "timestamp": "....",
-        "payload": {
-            "id": "foo.bar.org",
-            "type": "virtualserver",
-            "timestamp": "...",
-            "data": {
-                "data_that": "was_updated"
-            }
-        }
-    }
-
-##### asset.deleted
-
-    {
-        "type": "asset.deleted",
-        "timestamp": "....",
-        "payload": {
-            "id": "foo.bar.org"
-        }
-    }   
-
 
 ### Endpoints
 The following verbs and endpoints are available:
@@ -170,16 +114,16 @@ The following verbs and endpoints are available:
 | ----------------------------------------- | ------- | -----------
 | **/v3/**                                  | GET     | List types
 |                                           | OPTIONS | Get ACL's and usage
-| **/v3/< asset_type >**                    | GET     | List/Search within a type
-|                                           | POST    | Create type
+| **/v3/{{asset_type}}**                    | GET     | List / Filter within a given *asset_type*
+|                                           | POST    | Create *asset_type*
 |                                           | OPTIONS | Get ACL's and usage
-| **/v3/< asset_type >/properties**         | GET     | Get properties for type
-| **/v3/< asset_type >/< asset >**          | GET     | Get 
-|                                           | POST    | Create
-|                                           | PUT     | Update
-|                                           | DELETE  | Remove
+| **/v3/{{asset_type}}/properties**         | GET     | Get properties for *asset_type*
+| **/v3/{{asset_type}}/{{asset}}**          | GET     | Get *asset* of *asset_type*
+|                                           | POST    | Create *asset* of *asset_type*
+|                                           | PUT     | Update *asset* of *asset_type*
+|                                           | DELETE  | Remove *asset* of *asset_type*
 |                                           | OPTIONS | Get ACL's and usage
-| **/v3/< asset_type >/< asset >/versions** | GET     | Get versions
+| **/v3/{{asset_type}}/{{asset}}/versions** | GET     | Get versions of *asset* of *asset_type*
 |                                           | OPTIONS | Get ACL's and usage
 | **/v3/raw**                               | GET     | Pass-through request to elasticsearch index
 | **/v3/raw/versions**                      | GET     | Pass-through request to elasticsearch versions index
@@ -352,6 +296,70 @@ Response:
         "count": 123
     }]
 
+
+### Events
+If enabled events are fired on all `write` actions.  The available event types are:
+
+Event type         | Payload 
+-------------------|---------------------
+assettype.created  | Asset type id
+asset.created      | Complete asset data
+asset.updated      | Updated asset data
+asset.deleted      | Asset id
+
+Below are samples for each type:
+
+##### assettype.created
+
+    {
+        "type": "assettype.created",
+        "timestamp": "....",
+        "payload": {
+            "id": "loadbalancer"
+        }
+    } 
+
+##### asset.created
+
+    {
+        "type": "asset.created",
+        "timestamp": "....",
+        "payload": {
+            "id": "foo.bar.org",
+            "type": "virtualserver",
+            "timestamp": "...",
+            "data": {
+                "user_supplied": "data_on_creation"
+            }
+        }
+    }
+
+##### asset.updated
+
+    {
+        "type": "asset.updated",
+        "timestamp": "....",
+        "payload": {
+            "id": "foo.bar.org",
+            "type": "virtualserver",
+            "timestamp": "...",
+            "data": {
+                "data_that": "was_updated"
+            }
+        }
+    }
+
+##### asset.deleted
+
+    {
+        "type": "asset.deleted",
+        "timestamp": "....",
+        "payload": {
+            "id": "foo.bar.org"
+        }
+    }   
+
+
 Auth Tokens
 -----------
 To use token authentication, you need generate a token with HTTP basic authentication (default login is admin/vindalu):
@@ -398,16 +406,19 @@ Example:
         "admin": [ "user1", "user2" ]
     }
 
+
 Development
 -----------
 In order to setup the development environment you'll need the following:
 
+    - Godep
     - golang >= 1.4.2
     - make
     - docker
 
 To perform a local (native) build you can simply run:
 
+    godep restore
     make all
 
 Assuming all requirements are met, a full linux build can be performed as follows:
@@ -424,4 +435,4 @@ This will produce the following:
 
 ###### Notes:
 
-- Testing has primarily been done on Oracle 6.6/7 though it should work on any OS given the requirements are met.
+- Testing has primarily been done on Oracle 6.6/7 and docker though it should work on any OS as long as the requirements are met.
