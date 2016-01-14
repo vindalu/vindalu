@@ -8,7 +8,7 @@ import (
 	"github.com/vindalu/vindalu/auth"
 )
 
-const VERSION = "0.5.1"
+const VERSION = "0.5.2"
 
 const GNATSD_VERSION = server.VERSION
 
@@ -37,9 +37,9 @@ func (ac *AuthConfig) GetAuthenticator() (auth.IAuthenticator, error) {
 }
 
 type DatastoreConfig struct {
-	Type string `json:"type"`
-	//Config EssDatastoreConfig `json:"config"`
+	Type   string      `json:"type"`
 	Config interface{} `json:"config"`
+	// Config EssDatastoreConfig `json:"config"`
 }
 
 type EndpointsConfig struct {

@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/vindalu/vindalu/core"
+	"github.com/vindalu/vindalu/types"
 )
 
 var ASSET_TYPE_ACLS = map[string]string{
@@ -63,8 +64,7 @@ func (ir *VindaluApiHandler) AssetTypePropertiesHandler(w http.ResponseWriter, r
 		data    []byte
 	)
 
-	//props, err := ir.datastore.GetPropertiesForType(assetType)
-	props, err := ir.GetResourceTypeProperties(assetType)
+	props, err := ir.ListTypeProperties(assetType)
 	if err != nil {
 		code = 400
 		headers["Content-Type"] = "text/plain"
@@ -88,9 +88,18 @@ func (ir *VindaluApiHandler) AssetTypeGetHandler(w http.ResponseWriter, r *http.
 		code    int
 		headers = map[string]string{}
 		data    []byte
+
+		rsp interface{}
 	)
 
-	rsp, err := ir.ExecuteQuery(assetType, r)
+	userQuery, err := parseQueryFromHttpRequest(r)
+	if err == nil {
+		var qo types.QueryOptions
+		if qo, err = types.NewQueryOptions(r.URL.Query()); err == nil {
+			rsp, err = ir.ExecuteQuery(assetType, userQuery, &qo)
+		}
+	}
+
 	if err != nil {
 		data = []byte(err.Error())
 		code = 400
@@ -138,7 +147,7 @@ func (ir *VindaluApiHandler) AssetTypePostHandler(w http.ResponseWriter, r *http
 */
 func (ir *VindaluApiHandler) ListAssetTypesHandler(w http.ResponseWriter, r *http.Request) {
 	var (
-		types []core.AggregatedItem
+		types []core.ResourceType
 		err   error
 		b     []byte
 	)

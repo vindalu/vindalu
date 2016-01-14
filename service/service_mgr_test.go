@@ -44,15 +44,28 @@ func Test_NewServiceManager(t *testing.T) {
 }
 
 func Test_ServiceManager_getEndpointsRouter(t *testing.T) {
-	testSm.getEndpointsRouter()
+	rtr := testSm.getEndpointsRouter()
+	if rtr == nil {
+		t.Fatal("Router is nil")
+	}
 }
 
 func Test_ServiceManager_authenticateRequest(t *testing.T) {
 
 	r, _ := http.NewRequest("PUT", "/v3/virtualserver/tmp", bytes.NewBuffer([]byte(`{"environment":"production"}`)))
 	r.SetBasicAuth("admin", "vindaloo")
-	if _, err := testSm.authenticateRequest(r); err != nil {
+
+	username, err := testSm.authenticateRequest(r)
+	if err != nil {
 		t.Fatalf("%s", err)
 	}
 
+	if username != "admin" {
+		t.Fatalf("Invalid user: %s\n", username)
+	}
+}
+
+func Test_ServiceManager_Start(t *testing.T) {
+	go testSm.Start()
+	// TODO: test listening ports
 }

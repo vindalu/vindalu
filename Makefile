@@ -13,6 +13,7 @@ EPOCH = $(shell date +%s)
 URL = https://github.com/vindalu/vindalu
 
 .clean:
+	rm -f coverage.out
 	rm -rf ${BUILD_BASE}
 	go clean -i ./...
 
@@ -22,6 +23,7 @@ URL = https://github.com/vindalu/vindalu
 	[ -d "${BIN_DIR}" ] || mkdir -p ${BIN_DIR}
 
 .test:
+	go get golang.org/x/tools/cmd/cover
 	go test -cover ./...
 
 .build_darwin: .clean .deps

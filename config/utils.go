@@ -12,9 +12,6 @@ import (
 
 /* Converts relative paths to absolute */
 func normalizeConfigPaths(cfg *InventoryConfig) {
-	//if !filepath.IsAbs(cfg.Datastore.Config.MappingsDir) {
-	//	cfg.Datastore.Config.MappingsDir, _ = filepath.Abs(cfg.Datastore.Config.MappingsDir)
-	//}
 
 	if !filepath.IsAbs(cfg.Auth.GroupsFile) {
 		cfg.Auth.GroupsFile, _ = filepath.Abs(cfg.Auth.GroupsFile)
@@ -91,13 +88,11 @@ func LoadLDAPAuthenticator(cfg map[string]interface{}) (authenticator *auth.LDAP
 				err = fmt.Errorf("Invalid type: %s", v)
 				return
 			}
-			break
 		case "search_base":
 			if searchBase, ok = v.(string); !ok {
 				err = fmt.Errorf("Invalid type: %s", v)
 				return
 			}
-			break
 		case "bind_password":
 			if bindPassword, ok = v.(string); !ok {
 				err = fmt.Errorf("Invalid type: %s", v)
@@ -106,34 +101,25 @@ func LoadLDAPAuthenticator(cfg map[string]interface{}) (authenticator *auth.LDAP
 			if bindPassword, err = GetExternalField(bindPassword); err != nil {
 				return
 			}
-			break
 		case "bind_dn":
 			if bindDn, ok = v.(string); !ok {
 				err = fmt.Errorf("Invalid type: %s", v)
 				return
 			}
-			break
 		case "cache_ttl":
 			switch v.(type) {
 			case float64:
 				fttl, _ := v.(float64)
 				cachettl = int64(fttl)
-				break
 			case int64:
 				cachettl, _ = v.(int64)
-				break
 			case int:
 				ittl, _ := v.(int)
 				cachettl = int64(ittl)
-				break
 			default:
 				err = fmt.Errorf("Invalid type: %s", v)
 				return
 			}
-			break
-		default:
-			err = fmt.Errorf("Invalid field: %s", k)
-			return
 		}
 	}
 

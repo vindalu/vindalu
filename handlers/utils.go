@@ -1,12 +1,16 @@
 package handlers
 
 import (
-	"fmt"
+	"encoding/json"
+	//"fmt"
+	"io/ioutil"
+	"net/http"
 	"strings"
 
 	//elastigo "github.com/mattbaird/elastigo/lib"
 
-	"github.com/vindalu/vindalu/config"
+	//"github.com/vindalu/vindalu/config"
+	"github.com/vindalu/vindalu/core"
 )
 
 type customStringType string
@@ -24,31 +28,63 @@ func normalizeAssetType(assetType string) string {
 	return strings.ToLower(assetType)
 }
 
-/* Used for POST - presence and non nil checking of required fields */
-func validateRequiredFields(cfg *config.AssetConfig, req map[string]interface{}) error {
-	for _, rf := range cfg.RequiredFields {
-		if _, ok := req[rf]; !ok {
-			return fmt.Errorf("'%s' field required!", rf)
-		}
+// Unmarshal request body to req
+func parseRequestBody(r *http.Request) (req map[string]interface{}, err error) {
+	req = map[string]interface{}{}
+
+	if r.Body == nil {
+		return
 	}
-	return nil
+
+	var body []byte
+	// check if body has been supplied.  return w/o err if no body supplied
+	if _, berr := r.Body.Read(body); berr != nil {
+		return
+	}
+
+	if body, err = ioutil.ReadAll(r.Body); err != nil {
+		return
+	}
+	defer r.Body.Close()
+
+	err = json.Unmarshal(body, &req)
+	return
 }
 
-func validateEnforcedFields(cfg *config.AssetConfig, req map[string]interface{}) error {
-
-	for k, enforcedVals := range cfg.EnforcedFields {
-		if _, ok := req[k]; ok {
-			found := false
-			for _, ef := range enforcedVals {
-				if req[k] == ef {
-					found = true
-					break
-				}
-			}
-			if !found {
-				return fmt.Errorf("'%s' field must be: %v\n", k, enforcedVals)
-			}
+/*
+	Return:
+		should also return the params as elastic search global args/opts
+*/
+func getQueryParamsFromRequest(r *http.Request) (req map[string]interface{}, err error) {
+	paramsQuery := r.URL.Query()
+	req = map[string]interface{}{}
+	for k, v := range paramsQuery {
+		if !core.IsSearchParamOption(k) {
+			req[k] = strings.Join(v, "|")
 		}
 	}
-	return nil
+	return
+}
+
+// Parse query from http request.  This is a wrapper to handle the body and query
+// parameters
+func parseQueryFromHttpRequest(r *http.Request) (map[string]interface{}, error) {
+	var (
+		bodyReq  map[string]interface{}
+		paramReq map[string]interface{}
+		err      error
+	)
+
+	if paramReq, err = getQueryParamsFromRequest(r); err != nil {
+		return nil, err
+	}
+
+	// Overrite param fields with body if they overlap or add. Body takes precedence.
+	if bodyReq, err = parseRequestBody(r); err == nil {
+		for k, v := range bodyReq {
+			paramReq[k] = v
+		}
+	}
+
+	return paramReq, nil
 }

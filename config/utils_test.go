@@ -31,3 +31,47 @@ func Test_LoadLDAPAuthenticator(t *testing.T) {
 		t.Fatalf("%s", err)
 	}
 }
+
+func Test_LoadLDAPAuthenticator_ttl_int64(t *testing.T) {
+	testAuthCfg["cache_ttl"] = int64(2600)
+	_, err := LoadLDAPAuthenticator(testAuthCfg)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+}
+
+func Test_LoadLDAPAuthenticator_ttl_float64(t *testing.T) {
+	testAuthCfg["cache_ttl"] = float64(2600)
+	_, err := LoadLDAPAuthenticator(testAuthCfg)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+}
+
+func Test_LoadLDAPAuthenticator_error(t *testing.T) {
+	testAuthCfg["cache_ttl"] = "2600"
+	_, err := LoadLDAPAuthenticator(testAuthCfg)
+	if err == nil {
+		t.Fatal("Should fail")
+	}
+}
+
+func Test_GetExternalField(t *testing.T) {
+	str, err := GetExternalField("file://./utils.go")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(str)
+}
+
+func Test_GetExternalField_error(t *testing.T) {
+	_, err := GetExternalField("file://./utils")
+	if err == nil {
+		t.Fatal("Should have failed")
+	}
+
+	str, _ := GetExternalField("foobar")
+	if str != "foobar" {
+		t.Fatal("Mismatch")
+	}
+}

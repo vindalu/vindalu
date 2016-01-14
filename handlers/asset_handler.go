@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/vindalu/vindalu/core"
+	"github.com/vindalu/vindalu/types"
 	"github.com/vindalu/vindalu/versioning"
 )
 
@@ -109,10 +110,6 @@ func (ir *VindaluApiHandler) assetPostPutHandler(assetType, assetId, reqUser str
 
 	switch r.Method {
 	case "POST":
-		// Check attributes
-		if err = validateRequiredFields(&ir.Config().AssetCfg, reqData); err != nil {
-			break
-		}
 		_, isImport := r.URL.Query()["import"]
 		// Check if admin to see if type will be auto-created
 		isAdmin := context.Get(r, IsAdmin).(bool)
@@ -170,19 +167,12 @@ func (ir *VindaluApiHandler) AssetWriteRequestHandler(w http.ResponseWriter, r *
 		assetId   = mux.Vars(r)["asset"]
 		reqUser   = context.Get(r, Username).(string)
 	)
+	//ir.apiLog.Tracef("User: %s\n", reqUser)
 
 	switch r.Method {
 	case "POST", "PUT":
-		reqData, err := core.ParseRequestBody(r)
+		reqData, err := parseRequestBody(r)
 		if err != nil {
-			code = 400
-			data = []byte(err.Error())
-			headers = map[string]string{"Content-Type": "text/plain"}
-			break
-		}
-
-		// Check attrs and values
-		if err = validateEnforcedFields(&ir.Config().AssetCfg, reqData); err != nil {
 			code = 400
 			data = []byte(err.Error())
 			headers = map[string]string{"Content-Type": "text/plain"}
@@ -224,17 +214,19 @@ func (ir *VindaluApiHandler) AssetVersionsHandler(w http.ResponseWriter, r *http
 		assetId   = restVars["asset"]
 	)
 	// Get search parameters
-	reqOpts, err := core.BuildSearchOptions(ir.Config().DefaultResultSize, r.URL.Query())
+	//reqOpts, err := core.ParseGlobalParams(ir.Config().DefaultResultSize, r.URL.Query())
+	reqOpts, err := types.NewQueryOptions(r.URL.Query())
+	//reqOpts, err := core.BuildElasticsearchQueryOptions(ir.Config().DefaultResultSize, r.URL.Query())
 	if err != nil {
 		code = 400
 		data = []byte(err.Error())
 		headers["Content-Type"] = "text/plain"
 	} else {
-		// the count should come from a query param
-		versionCount, _ := reqOpts["size"].(int64)
-		ir.apiLog.Noticef("Requested version count: %d\n", versionCount)
+		// The count should come from a query param
+		//versionCount, _ := reqOpts["size"].(int64)
+		ir.apiLog.Debugf("Requested version count: %d\n", reqOpts.Size)
 
-		assetVersions, err := ir.GetResourceVersions(assetType, assetId, versionCount)
+		assetVersions, err := ir.GetResourceVersions(assetType, assetId, reqOpts.Size)
 		if err != nil {
 			code = 404
 			data = []byte(err.Error())
@@ -247,7 +239,7 @@ func (ir *VindaluApiHandler) AssetVersionsHandler(w http.ResponseWriter, r *http
 				headers["Content-Type"] = "application/json"
 			} else {
 				ir.apiLog.Debugf("Recieved versions: %d\n", len(assetVersions))
-
+				// Check if diff was requested.
 				if _, ok := r.URL.Query()["diff"]; ok {
 
 					diffs, err := versioning.GenerateVersionDiffs(assetVersions...)
@@ -268,6 +260,7 @@ func (ir *VindaluApiHandler) AssetVersionsHandler(w http.ResponseWriter, r *http
 			}
 		}
 	}
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	ir.writeAndLogResponse(w, r, code, headers, data)
 }

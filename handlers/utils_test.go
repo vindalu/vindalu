@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"bytes"
+	"net/http"
 	"testing"
-
-	"github.com/vindalu/vindalu/config"
 )
 
 func Test_normalizeAssetType(t *testing.T) {
@@ -15,47 +15,28 @@ func Test_normalizeAssetType(t *testing.T) {
 	}
 }
 
-func Test_validateRequiredFields(t *testing.T) {
-	var cfg *config.AssetConfig = &config.AssetConfig{
-		RequiredFields: []string{"status", "environment"},
-		EnforcedFields: map[string][]string{
-			"status":      []string{"enabled", "disabled"},
-			"environment": []string{"production", "development", "testing", "lab"},
-		},
+func Test_parseRequestBody(t *testing.T) {
+	// case 1: handle request body
+	jsonStr := []byte(`{"os":"xenserver"}`)
+	r1, _ := http.NewRequest("GET", "http://localhost:5454/v1/pool", bytes.NewBuffer(jsonStr))
+	r1.Header.Set("X-Custom-Header", "myvalue")
+	r1.Header.Set("Content-Type", "application/json")
+	req, err1 := parseRequestBody(r1)
+	if err1 != nil || req["os"] != "xenserver" {
+		t.Fatalf("Error while parsing request Body!")
 	}
-	req1 := map[string]interface{}{"status": true}
-	req2 := map[string]interface{}{"status": true, "environment": true}
-	err := validateRequiredFields(cfg, req1)
-	if err == nil {
-		t.Fatalf("Field requirments should not be met")
-	}
-	err = validateRequiredFields(cfg, req2)
-	if err != nil {
-		t.Fatalf("Field requirments should be met")
+
+	// case2 : ignore query params
+	r2, _ := http.NewRequest("GET", "http://localhost:5454/v1/pool?os=xenserver", nil)
+	if _, err2 := parseRequestBody(r2); err2 != nil {
+		t.Fatalf("Error while parsing request query params!")
 	}
 }
 
-func Test_validateEnforcedFields(t *testing.T) {
-	var cfg *config.AssetConfig = &config.AssetConfig{
-		RequiredFields: []string{"status", "environment"},
-		EnforcedFields: map[string][]string{
-			"status":      []string{"enabled", "disabled"},
-			"environment": []string{"production", "development", "testing", "lab"},
-		},
-	}
-	req1 := map[string]interface{}{
-		"status":     "enabled",
-		"enviroment": "production",
-	}
-	req2 := map[string]interface{}{
-		"status": nil,
-	}
-	err1 := validateEnforcedFields(cfg, req1)
-	if err1 != nil {
-		t.Fatalf("Field value is enforced, should not return error")
-	}
-	err2 := validateEnforcedFields(cfg, req2)
-	if err2 == nil {
-		t.Fatalf("Field value is not enforced, should return error")
+func Test_getQueryParamsFromRequest(t *testing.T) {
+	r, _ := http.NewRequest("GET", "http://localhost:5454/v1/pool?os=xenserver&os=ubuntu", nil)
+	req, err := getQueryParamsFromRequest(r)
+	if err != nil || req["os"] != "xenserver|ubuntu" {
+		t.Fatalf("Error while parsing request query params!")
 	}
 }
